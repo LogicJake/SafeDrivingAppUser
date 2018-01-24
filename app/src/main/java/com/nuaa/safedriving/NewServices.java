@@ -15,7 +15,7 @@ import java.security.MessageDigest;
  */
 
 public class NewServices {
-    private static String rooturl = "http://123.207.214.55/driving/";
+    private static String rooturl = "http://api.logicjake.xyz/driving/";
    // private static String rooturl = "http://192.168.1.2/driving/";
 
     public static String getMD5(String message) {

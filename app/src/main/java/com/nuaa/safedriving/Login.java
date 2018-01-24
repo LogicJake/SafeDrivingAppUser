@@ -186,7 +186,7 @@ public class Login extends AppCompatActivity {
         bt_sign_up.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this,sign_up.class);
+                Intent intent = new Intent(Login.this,SignUp.class);
                 startActivity(intent);
             }
         });

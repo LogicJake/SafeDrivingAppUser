@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class sign_up extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -26,7 +26,7 @@ public class sign_up extends AppCompatActivity {
             JSONObject result = (JSONObject) msg.obj;
             if (result == null){
                 pDialog.cancel();
-                Toast.makeText(sign_up.this, R.string.server_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUp.this, R.string.server_error, Toast.LENGTH_SHORT).show();
             }
             else {
                 int status = 0;
@@ -45,13 +45,13 @@ public class sign_up extends AppCompatActivity {
                     pDialog.cancel();
                     editor.putString("token", token);
                     editor.commit();
-                    Toast.makeText(sign_up.this, R.string.sign_up_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(sign_up.this, Login.class);
+                    Toast.makeText(SignUp.this, R.string.sign_up_success, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignUp.this, Login.class);
                     startActivity(intent);
                     finish();
                 } else if(status == 2) {
                     pDialog.cancel();
-                    Toast.makeText(sign_up.this, R.string.name_has_exist, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUp.this, R.string.name_has_exist, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -73,7 +73,7 @@ public class sign_up extends AppCompatActivity {
         bt_sign_up = (Button)findViewById(R.id.signup);
         bt_sign_up.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                pDialog = new SweetAlertDialog(sign_up.this, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog = new SweetAlertDialog(SignUp.this, SweetAlertDialog.PROGRESS_TYPE);
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                 pDialog.setTitleText(getString(R.string.pushing_info));
                 pDialog.setCancelable(false);

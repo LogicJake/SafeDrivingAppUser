@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:replace="icon">
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".sign_up">
+        <activity android:name=".SignUp">
         </activity>
         <activity android:name=".Login">
             <intent-filter>
