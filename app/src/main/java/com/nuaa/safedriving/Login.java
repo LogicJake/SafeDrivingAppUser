@@ -19,11 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Login extends AppCompatActivity {
     private Handler handler = new Handler(){
@@ -97,6 +98,32 @@ public class Login extends AppCompatActivity {
                         }
                     }
                     break;
+                case 1:
+                    JSONObject inf = (JSONObject) msg.obj;
+                    String uid = null;
+                    String token2 = null;
+                    try {
+                        uid = inf.getString("user_id");
+                        token2 = inf.getString("token");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (uid == null){
+                        pDialog.cancel();
+                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();}
+                    else if (uid.equals("0")) {
+                        pDialog.cancel();
+                        Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        pDialog.cancel();
+                        editor.putString("token",token2);
+                        editor.commit();
+                        //Intent intent = new Intent(Login.this, CheckID.class);
+                        System.out.println(uid);
+                        //startActivity(intent);
+                    }
+                    break;
             }
         }
     };
@@ -119,6 +146,7 @@ public class Login extends AppCompatActivity {
         editPassword = (EditText)findViewById(R.id.editText2);
         checkBox = (CheckBox)findViewById(R.id.cb);
         eye = (ImageView)findViewById(R.id.eye);
+        forget = (TextView) findViewById(R.id.forget_pass);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
         String name = preferences.getString("userName",null);
@@ -188,6 +216,47 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Login.this,SignUp.class);
                 startActivity(intent);
+            }
+        });
+
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final android.app.AlertDialog.Builder builder;
+                final EditText et = new EditText(Login.this);
+                builder = new android.app.AlertDialog.Builder(Login.this);
+                builder.setTitle(R.string.enter_name);
+                builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pDialog = new SweetAlertDialog(Login.this, SweetAlertDialog.PROGRESS_TYPE);
+                        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        pDialog.setTitleText(getString(R.string.searching));
+                        pDialog.setCancelable(false);
+                        pDialog.show();
+                        try {
+                            new Thread(new Runnable(){
+                                @Override
+                                public void run()
+                                {
+                                    String name = et.getText().toString();
+                                    JSONObject uid = NewServices.gettoken(name);
+                                    System.out.println(uid);
+                                    Message msg = new Message();
+                                    msg.what = 1;
+                                    msg.obj = uid;
+                                    handler.sendMessage(msg);
+                                }
+                            }).start();
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                builder.setView(et);
+                builder.setNegativeButton(R.string.cancel, null);
+                builder.create().show();
             }
         });
     }

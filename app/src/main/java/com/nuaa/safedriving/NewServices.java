@@ -15,8 +15,7 @@ import java.security.MessageDigest;
  */
 
 public class NewServices {
-    private static String rooturl = "http://123.207.214.55/driving/";
-   // private static String rooturl = "http://192.168.1.2/driving/";
+    private static String rooturl = "http://api.logicjake.xyz/driving/";
 
     public static String getMD5(String message) {
         String md5 = "";
@@ -190,5 +189,43 @@ public class NewServices {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static JSONObject gettoken(String name) {
+        JSONObject res = null;
+        try {
+            String path = rooturl+"index.php?_action=getForgetpasswd&user_name="+name;
+            URL url = new URL(path);
+            // 获得连接
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            // 设置请求的方式
+            urlConnection.setRequestMethod("GET");
+            // 设置请求的超时时间
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == 200) {
+                // 获取响应的输入流对象
+                InputStream is = urlConnection.getInputStream();
+                // 创建字节输出流对象
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // 定义读取的长度
+                int len = 0;
+                // 定义缓冲区
+                byte buffer[] = new byte[1024];
+                // 按照缓冲区的大小，循环读取
+                while ((len = is.read(buffer)) != -1) {
+                    // 根据读取的长度写入到os对象中
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                System.out.println(baos.toString());
+                res = new JSONObject(baos.toString()).getJSONObject("data");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 }
