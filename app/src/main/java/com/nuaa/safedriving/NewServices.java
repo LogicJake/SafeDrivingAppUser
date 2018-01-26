@@ -50,7 +50,6 @@ public class NewServices {
         JSONObject jsonObject = null;
         try {
             user_passwd = getMD5(user_passwd);
-            System.out.println(user_passwd);
             String path = rooturl+"index.php?_action=postLogin";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -227,5 +226,85 @@ public class NewServices {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static int sendCode(String mail,String token){
+        try {
+            String path = rooturl+"index.php?_action=verifyMailbox&action_type=sendCode&token="+token+"&mail="+mail;
+            URL url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            // 设置请求的方式
+            urlConnection.setRequestMethod("GET");
+            // 设置请求的超时时间
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == 200) {
+                // 获取响应的输入流对象
+                InputStream is = urlConnection.getInputStream();
+                // 创建字节输出流对象
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // 定义读取的长度
+                int len = 0;
+                // 定义缓冲区
+                byte buffer[] = new byte[1024];
+                // 按照缓冲区的大小，循环读取
+                while ((len = is.read(buffer)) != -1) {
+                    // 根据读取的长度写入到os对象中
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                System.out.println(baos.toString());
+                String res = new JSONObject(baos.toString()).getString("data");
+                if (res.equals("send success"))
+                    return 1;
+                else
+                    return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int verifyCode(String code,String token){
+        try {
+            String path = rooturl+"index.php?_action=verifyMailbox&action_type=verifyCode&token="+token+"&code="+code;
+            URL url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            // 设置请求的方式
+            urlConnection.setRequestMethod("GET");
+            // 设置请求的超时时间
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == 200) {
+                // 获取响应的输入流对象
+                InputStream is = urlConnection.getInputStream();
+                // 创建字节输出流对象
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // 定义读取的长度
+                int len = 0;
+                // 定义缓冲区
+                byte buffer[] = new byte[1024];
+                // 按照缓冲区的大小，循环读取
+                while ((len = is.read(buffer)) != -1) {
+                    // 根据读取的长度写入到os对象中
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                System.out.println(baos.toString());
+                String res = new JSONObject(baos.toString()).getString("data");
+                if (res.equals("fail"))
+                    return 0;
+                else
+                    return 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

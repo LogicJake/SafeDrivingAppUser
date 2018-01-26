@@ -31,8 +31,7 @@
         android:layout_marginTop="10dp"
         android:layout_below="@+id/login_username"
         android:orientation="horizontal"
-        android:layout_alignStart="@+id/login_username"
-        android:layout_alignLeft="@+id/login_username">
+        android:layout_alignStart="@+id/login_username">
         <EditText
             android:id="@+id/editText2"
             android:layout_width="match_parent"

@@ -2,14 +2,12 @@ package com.nuaa.safedriving;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,14 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 
 public class Login extends AppCompatActivity {
     private Handler handler = new Handler(){
@@ -37,6 +31,7 @@ public class Login extends AppCompatActivity {
                     String password = editPassword.getText().toString().trim();
                     int status = -1;
                     int id = -1;
+                    int email = -1;
                     String token = null;
                     super.handleMessage(msg);
                     JSONObject result = (JSONObject) msg.obj;
@@ -56,6 +51,8 @@ public class Login extends AppCompatActivity {
                         try {
                             status = result.getInt("status");
                             id = result.getInt("id");
+                            token = result.getString("token");
+                            email = result.getInt("email");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -74,9 +71,17 @@ public class Login extends AppCompatActivity {
                                 editor.commit();
                             }
                             pDialog.cancel();
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if (email == 1) {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else
+                            {
+                                Intent intent = new Intent(Login.this, FullInEmail.class);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
                         if (status == 0) {
                             editor.remove("userName");
@@ -206,7 +211,6 @@ public class Login extends AppCompatActivity {
                     }
 
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -249,7 +253,6 @@ public class Login extends AppCompatActivity {
                                 }
                             }).start();
                         } catch (Exception e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }

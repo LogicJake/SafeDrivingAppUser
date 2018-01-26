@@ -46,7 +46,7 @@ public class SignUp extends AppCompatActivity {
                     editor.putString("token", token);
                     editor.commit();
                     Toast.makeText(SignUp.this, R.string.sign_up_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignUp.this, Login.class);
+                    Intent intent = new Intent(SignUp.this, FullInEmail.class);
                     startActivity(intent);
                     finish();
                 } else if(status == 2) {
