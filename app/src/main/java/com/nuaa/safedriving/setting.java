@@ -11,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -88,6 +90,26 @@ public class setting extends AppCompatActivity {
                             break;
                     }
                     break;
+                case 1:
+                    super.handleMessage(msg);
+                    res = (int)msg.obj;
+                    if (res == 1)
+                    {
+                        Toast.makeText(setting.this, "注销成功", Toast.LENGTH_SHORT).show();
+                        editor.clear();
+                        editor.commit();
+                        Intent intent = new Intent(setting.this, Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else
+                    {
+                        Toast.makeText(setting.this, "注销失败", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(setting.this, Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    break;
             }
         }
     };
@@ -100,6 +122,7 @@ public class setting extends AppCompatActivity {
     private SweetAlertDialog pDialog;
     private TextView name;
     private SharedPreferences.Editor editor;
+    private Button exit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +130,7 @@ public class setting extends AppCompatActivity {
         backup = (ImageView)findViewById(R.id.backup);
         avator = (CircleImageView)findViewById(R.id.avator);
         name = (TextView)findViewById(R.id.name);
+        exit = (Button)findViewById(R.id.exit);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(setting.this).build();
@@ -136,6 +160,24 @@ public class setting extends AppCompatActivity {
                 menuWindow = new SelectPicPopupWindow(setting.this, itemsOnClick);
                 //显示窗口
                 menuWindow.showAtLocation(setting.this.findViewById(R.id.pic), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable(){
+                    @Override
+                    public void run()
+                    {
+                        final String token = preferences.getString("token",null);
+                        int result = NewServices.logout(token);
+                        Message msg = new Message();
+                        msg.what = 1;
+                        msg.obj = result;
+                        handler.sendMessage(msg);
+                    }
+                }).start();
             }
         });
     }

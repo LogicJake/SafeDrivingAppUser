@@ -53,8 +53,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="南京航空航天大学 "
-                            android:textColor="#000000"/>
+                            android:text="南京航空航天大学 " />
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -106,7 +105,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="包裹"
+                        android:text="众包任务"
                         android:textSize="15dp"
                         android:gravity="center"/>
                     <LinearLayout

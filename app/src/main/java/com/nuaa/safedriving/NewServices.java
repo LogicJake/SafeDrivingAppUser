@@ -382,4 +382,42 @@ public class NewServices {
         }
         return result;
     }
+
+    public static int logout(String token){
+        int result = 0;
+        System.out.println(token);
+        try {
+            String path = rooturl+"index.php?_action=postLogout&token="+token;
+            URL url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            // 设置请求的方式
+            urlConnection.setRequestMethod("GET");
+            // 设置请求的超时时间
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == 200) {
+                // 获取响应的输入流对象
+                InputStream is = urlConnection.getInputStream();
+                // 创建字节输出流对象
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // 定义读取的长度
+                int len = 0;
+                // 定义缓冲区
+                byte buffer[] = new byte[1024];
+                // 按照缓冲区的大小，循环读取
+                while ((len = is.read(buffer)) != -1) {
+                    // 根据读取的长度写入到os对象中
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                System.out.println(baos.toString());
+                result = new JSONObject(baos.toString()).getInt("data");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
