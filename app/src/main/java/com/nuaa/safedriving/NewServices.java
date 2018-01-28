@@ -1,14 +1,21 @@
 package com.nuaa.safedriving;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.util.UUID;
+
+import static android.provider.Telephony.Mms.Part.CHARSET;
 
 /**
  * Created by SCY on 2017/12/20/0020.
@@ -306,5 +313,72 @@ public class NewServices {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static int postPic(String token,File file) {
+        int result = 0;
+        int res = 0;
+        String path = rooturl+"index.php?_action=postAvator&token="+token;
+        URL url = null;
+        String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+        String PREFIX = "--", LINE_END = "\r\n";
+        String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+        try {
+            url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setReadTimeout(50000);
+            urlConnection.setConnectTimeout(50000);
+            urlConnection.setDoInput(true); // 允许输入流
+            urlConnection.setDoOutput(true); // 允许输出流
+            urlConnection.setRequestMethod("POST"); // 请求方式
+            urlConnection.setRequestProperty("Charset", CHARSET); // 设置编码
+            urlConnection.setRequestProperty("connection", "keep-alive");
+            urlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
+            if (file != null) {
+                DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream());
+                StringBuffer sb = new StringBuffer();
+                sb.append(PREFIX);
+                sb.append(BOUNDARY);
+                sb.append(LINE_END);
+                sb.append("Content-Disposition: form-data; name=\"file\"; filename=\""
+                        + file.getName() + "\"" + LINE_END);
+                sb.append("Content-Type: application/octet-stream; charset="
+                        + CHARSET + LINE_END);
+                sb.append(LINE_END);
+                dos.write(sb.toString().getBytes());
+                InputStream is = new FileInputStream(file);
+                byte[] bytes = new byte[1024];
+                int len = 0;
+                while ((len = is.read(bytes)) != -1) {
+                    dos.write(bytes, 0, len);
+                }
+                is.close();
+                dos.write(LINE_END.getBytes());
+                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
+                        .getBytes();
+                dos.write(end_data);
+                dos.flush();
+                /**
+                 * 获取响应码 200=成功 当响应成功，获取响应的流
+                 */
+                res = urlConnection.getResponseCode();
+                if (res == 200) {
+                    InputStream input = urlConnection.getInputStream();
+                    StringBuffer sb1 = new StringBuffer();
+                    int ss;
+                    while ((ss = input.read()) != -1) {
+                        sb1.append((char) ss);
+                    }
+                    System.out.println(sb1.toString());
+                    result = new JSONObject(sb1.toString()).getJSONObject("data").getInt("status");
+                } else {
+                    result = 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

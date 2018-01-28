@@ -73,16 +73,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="出售"
+                        android:text="我的评价"
                         android:textSize="15dp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/sell_num"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:textSize="15dp"
-                        android:text="(0)"
                         android:gravity="center"/>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -115,15 +107,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="收藏"
-                        android:textSize="15dp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/like_num"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="(0)"
+                        android:text="包裹"
                         android:textSize="15dp"
                         android:gravity="center"/>
                     <LinearLayout
