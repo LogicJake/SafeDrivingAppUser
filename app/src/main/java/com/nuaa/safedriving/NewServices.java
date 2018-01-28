@@ -22,7 +22,8 @@ import static android.provider.Telephony.Mms.Part.CHARSET;
  */
 
 public class NewServices {
-    private static String rooturl = "http://api.logicjake.xyz/driving/";
+    public static String rooturl = "http://api.logicjake.xyz/driving/";
+    public static String picurl = "http://api.logicjake.xyz/driving-file/avator/";
 
     public static String getMD5(String message) {
         String md5 = "";

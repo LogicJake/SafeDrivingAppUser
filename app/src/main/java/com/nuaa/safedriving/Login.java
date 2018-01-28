@@ -2,12 +2,15 @@ package com.nuaa.safedriving;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,9 +18,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+
+import static com.nuaa.safedriving.NewServices.picurl;
 
 
 public class Login extends AppCompatActivity {
@@ -57,6 +72,7 @@ public class Login extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         if (status == 1) {
+                            saveBitmapToSharedPreferences(picurl+id+".jpg");
                             if (checkBox.isChecked()) {
                                 editor.putString("userName", name);
                                 editor.putString("userPassword", password);
@@ -154,6 +170,11 @@ public class Login extends AppCompatActivity {
         forget = (TextView) findViewById(R.id.forget_pass);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(Login.this).build();
+        ImageLoader.getInstance().init(config);
+
+
         String name = preferences.getString("userName",null);
         String password = preferences.getString("userPassword", null);
         if (name == null||password == null) {
@@ -163,6 +184,8 @@ public class Login extends AppCompatActivity {
             editPassword.setText(password);
             checkBox.setChecked(true);
         }
+
+
         eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -260,6 +283,21 @@ public class Login extends AppCompatActivity {
                 builder.setView(et);
                 builder.setNegativeButton(R.string.cancel, null);
                 builder.create().show();
+            }
+        });
+    }
+
+
+    public void saveBitmapToSharedPreferences(String url){
+        DisplayImageOptions options = new DisplayImageOptions.Builder().build();
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                String imageString = new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+                editor.putString("avator", imageString);
+                editor.commit();
             }
         });
     }

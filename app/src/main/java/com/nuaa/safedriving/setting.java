@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -23,11 +24,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,15 +40,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
+import static com.nuaa.safedriving.NewServices.picurl;
 
 public class setting extends AppCompatActivity {
-    private ImageView backup;
-    private CircleImageView avator;
-    private SelectPicPopupWindow menuWindow;
-    private DisplayImageOptions displayImageOptions;
-    private SharedPreferences preferences;
-    private String url;
-    private SweetAlertDialog pDialog;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -56,12 +53,13 @@ public class setting extends AppCompatActivity {
                     switch (res)
                     {
                         case 200:
+                            saveBitmapToSharedPreferences(picurl+preferences.getInt("id",0)+".jpg");
                             pDialog.cancel();
                             break;
                         case 404:
-                             pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                             pDialog.setTitleText("Oops...");
-                             pDialog.setContentText("出错了");
+                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                            pDialog.setTitleText("Oops...");
+                            pDialog.setContentText("出错了");
                             pDialog.setCancelable(true);
                              break;
                         case 0:
@@ -93,15 +91,24 @@ public class setting extends AppCompatActivity {
             }
         }
     };
-
+    private ImageView backup;
+    private CircleImageView avator;
+    private SelectPicPopupWindow menuWindow;
+    private DisplayImageOptions displayImageOptions;
+    private SharedPreferences preferences;
+    private String url;
+    private SweetAlertDialog pDialog;
+    private TextView name;
+    private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         backup = (ImageView)findViewById(R.id.backup);
         avator = (CircleImageView)findViewById(R.id.avator);
+        name = (TextView)findViewById(R.id.name);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
-
+        editor = preferences.edit();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(setting.this).build();
         ImageLoader.getInstance().init(config);
         displayImageOptions = new DisplayImageOptions.Builder()
@@ -109,6 +116,12 @@ public class setting extends AppCompatActivity {
                 .cacheInMemory(true)
                 .cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(300))
                 .imageScaleType(ImageScaleType.EXACTLY).build();
+
+        Bitmap avator_content = getBitmapFromSharedPreferences();
+        if (avator_content != null)
+            avator.setImageBitmap(avator_content);
+        name.setText(preferences.getString("userName","guest"));
+
 
         backup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +196,7 @@ public class setting extends AppCompatActivity {
                     pDialog.setTitleText("上传头像中");
                     pDialog.setCancelable(false);
                     pDialog.show();
+                    ImageLoader.getInstance().displayImage("file:/"+url,avator,displayImageOptions);
                     uploadPic(url);
                     break;
             }
@@ -205,5 +219,32 @@ public class setting extends AppCompatActivity {
             }
         }).start();
         PictureFileUtils.deleteCacheDirFile(setting.this);
+    }
+
+    private Bitmap getBitmapFromSharedPreferences(){
+        Bitmap bitmap = null;
+        String imageString=preferences.getString("avator", "null");
+        if(imageString.equals("null"))
+            bitmap = null;
+        else {
+            byte[] byteArray = Base64.decode(imageString, Base64.DEFAULT);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
+            bitmap = BitmapFactory.decodeStream(byteArrayInputStream);
+        }
+        return bitmap;
+    }
+
+    public void saveBitmapToSharedPreferences(String url){
+        DisplayImageOptions options = new DisplayImageOptions.Builder().build();
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                String imageString = new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+                editor.putString("avator", imageString);
+                editor.commit();
+            }
+        });
     }
 }
