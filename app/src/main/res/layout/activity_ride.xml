@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.nuaa.safedriving.Ride">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -24,11 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginRight="40dp"
             android:gravity="center"
             android:text="乘车体验"
             android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:layout_marginRight="40dp"/>
+            android:textSize="20dp" />
 
     </LinearLayout>
 </LinearLayout>
