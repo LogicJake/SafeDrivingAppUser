@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     initHome();
                     return true;
+                case R.id.navigation_car:
+                    Intent intent = new Intent(MainActivity.this, Ride.class);
+                    startActivity(intent);
+                    return true;
                 case R.id.navigation_info:
                     initUserInfo();
                     return true;

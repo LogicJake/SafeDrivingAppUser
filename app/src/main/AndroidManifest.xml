@@ -34,8 +34,13 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
         <activity android:name=".FullInEmail" />
-        <activity android:name=".setting"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".setting"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Ride"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
