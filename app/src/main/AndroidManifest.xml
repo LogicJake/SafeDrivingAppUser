@@ -39,8 +39,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Ride"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".MyCalendar"></activity>
     </application>
 
 </manifest>

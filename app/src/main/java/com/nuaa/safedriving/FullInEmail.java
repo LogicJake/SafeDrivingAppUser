@@ -79,7 +79,6 @@ public class FullInEmail extends AppCompatActivity {
         save = (Button)findViewById(R.id.save);
         email = (EditText)findViewById(R.id.email);
         VerificationCode = (EditText)findViewById(R.id.VerificationCode);
-
         SendVerificationCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
