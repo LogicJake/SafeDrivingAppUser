@@ -174,7 +174,6 @@ public class Login extends AppCompatActivity {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(Login.this).build();
         ImageLoader.getInstance().init(config);
 
-
         String name = preferences.getString("userName",null);
         String password = preferences.getString("userPassword", null);
         if (name == null||password == null) {
@@ -208,7 +207,6 @@ public class Login extends AppCompatActivity {
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                 pDialog.setTitleText(getString(R.string.loging));
                 pDialog.setCancelable(false);
-                pDialog.show();
                 try {
                     final String name = editName.getText().toString();
                     final String password = editPassword.getText().toString();
@@ -218,6 +216,7 @@ public class Login extends AppCompatActivity {
                         if (password.length() == 0)
                             Toast.makeText(Login.this, R.string.password_no_empty, Toast.LENGTH_SHORT).show();
                         else {
+                            pDialog.show();
                             new Thread(new Runnable(){
                                 @Override
                                 public void run()

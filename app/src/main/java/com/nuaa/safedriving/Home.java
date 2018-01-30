@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class Home extends Fragment {
 
     private TextView origin,destination,time;
     private ImageView exchange;
+    private Button query;
 
     public Home() {
     }
@@ -33,6 +35,7 @@ public class Home extends Fragment {
         time = (TextView)view.findViewById(R.id.time);
         destination = (TextView)view.findViewById(R.id.destination);
         exchange = (ImageView)view.findViewById(R.id.exchange);
+        query = (Button)view.findViewById(R.id.query);
 
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -58,6 +61,20 @@ public class Home extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), MyCalendar.class);
                 startActivityForResult(intent,200);
+            }
+        });
+
+        query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), ShuttleInfo.class);
+                String origin_content = origin.getText().toString().trim();
+                if(origin_content.equals("将军路校区"))
+                    intent.putExtra("type", 1);
+                else
+                    intent.putExtra("type", 2);
+                intent.putExtra("date", time.getText().toString().trim());
+                startActivity(intent);
             }
         });
         return view;
@@ -125,6 +142,7 @@ public class Home extends Fragment {
                 date_text += " 今天";
             if (cal2.get(Calendar.DAY_OF_MONTH) + 1 == cal.get(Calendar.DAY_OF_MONTH))
                 date_text += " 明天";
+            //TODO 跨月份问题
             if (cal2.get(Calendar.DAY_OF_MONTH) + 2 == cal.get(Calendar.DAY_OF_MONTH))
                 date_text += " 后天";
         }
