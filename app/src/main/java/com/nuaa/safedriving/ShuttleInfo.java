@@ -1,12 +1,8 @@
 package com.nuaa.safedriving;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,12 +15,8 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +38,7 @@ public class ShuttleInfo extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
+                    System.out.println(mListData.size());
                     if (mListData.size() == 0)
                         noInfo.setVisibility(View.VISIBLE);
                     else
@@ -121,49 +114,54 @@ public class ShuttleInfo extends AppCompatActivity {
                 public void run()
                 {
                     JSONArray res = NewServices.getInfo(type,time);
-                    for (int i = 0; i < res.length(); i++){
-                        try {
-                            JSONObject temp = (JSONObject) res.get(i);
-                            HashMap map = new HashMap<String,Object>();
-                            map.put("time",temp.getString("time"));
-                            map.put("car_num", temp.getString("car_num")+"辆");
-                            if(type == 1) {       //将军路出发
-                                map.put("destination", "明故宫校区");
-                                if(temp.getString("east").equals("1"))
-                                    map.put("departure","将军路校区东区");
-                                if(temp.getString("lancui").equals("1"))
-                                    map.put("departure","揽翠苑");
-                            }
-                            else{
-                                map.put("departure", "明故宫校区");
-                                if(temp.getString("east").equals("1"))
-                                    map.put("destination","将军路校区东区");
-                                if(temp.getString("lancui").equals("1"))
-                                    map.put("destination","揽翠苑");
-                            }
-                            Calendar c = Calendar.getInstance();
-                            c.setTime(date_d);
-                            Calendar c2 = Calendar.getInstance();
-                            c2.setTime(new Date());
-                            if(c.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)){
-                                long now_time = System.currentTimeMillis()/1000;
-                                String date_s = fdate+" "+temp.getString("time");
-                                SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+                    if(res!=null) {
+                        for (int i = 0; i < res.length(); i++) {
+                            try {
+                                JSONObject temp = (JSONObject) res.get(i);
+                                HashMap map = new HashMap<String, Object>();
+                                map.put("time", temp.getString("time"));
+                                map.put("car_num", temp.getString("car_num") + "辆");
+                                if (type == 1) {       //将军路出发
+                                    map.put("destination", "明故宫校区");
+                                    if (temp.getString("east").equals("1"))
+                                        map.put("departure", "将军路校区东区");
+                                    if (temp.getString("lancui").equals("1"))
+                                        map.put("departure", "揽翠苑");
+                                } else {
+                                    map.put("departure", "明故宫校区");
+                                    if (temp.getString("east").equals("1"))
+                                        map.put("destination", "将军路校区东区");
+                                    if (temp.getString("lancui").equals("1"))
+                                        map.put("destination", "揽翠苑");
+                                }
+                                Calendar c = Calendar.getInstance();
+                                c.setTime(date_d);
+                                Calendar c2 = Calendar.getInstance();
+                                c2.setTime(new Date());
+                                if (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)) {
+                                    long now_time = System.currentTimeMillis() / 1000;
+                                    String date_s = fdate + " " + temp.getString("time");
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
 
-                                if(format.parse(date_s).getTime()/1000 <= now_time)
-                                    map.put("status","已发车");
-                                else
-                                    map.put("status","未发车");
+                                    if (format.parse(date_s).getTime() / 1000 <= now_time)
+                                        map.put("status", "已发车");
+                                    else
+                                        map.put("status", "未发车");
+                                } else
+                                    map.put("status", "未发车");
+                                mListData.add(map);
+                                Message msg = new Message();
+                                msg.what = 1;
+                                handler.sendMessage(msg);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            else
-                                map.put("status","未发车");
-                            mListData.add(map);
-                            Message msg = new Message();
-                            msg.what = 1;
-                            handler.sendMessage(msg);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                    }
+                    else {
+                        Message msg = new Message();
+                        msg.what = 1;
+                        handler.sendMessage(msg);
                     }
                 }
             }).start();
