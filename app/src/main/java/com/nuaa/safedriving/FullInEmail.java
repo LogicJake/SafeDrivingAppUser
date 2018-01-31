@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class FullInEmail extends AppCompatActivity {
                     int status = (int)msg.obj;
                     if (status == 1) {
                         System.out.println("success");
+                        Toast.makeText(FullInEmail.this,"发送成功",Toast.LENGTH_SHORT);
                         CountDownTimer timer = new CountDownTimer(10*1000, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
@@ -55,7 +57,7 @@ public class FullInEmail extends AppCompatActivity {
                     if (status == 1) {
                         System.out.println("success");
                         Toast.makeText(FullInEmail.this,"验证成功",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(FullInEmail.this, MainActivity.class);
+                        Intent intent = new Intent(FullInEmail.this, Login.class);
                         startActivity(intent);
                         finish();
                     }

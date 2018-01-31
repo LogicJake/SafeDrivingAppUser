@@ -33,7 +33,10 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".FullInEmail" />
+        <activity
+            android:name=".FullInEmail"
+            android:label="邮箱验证"
+            />
         <activity
             android:name=".setting"
             android:theme="@style/AppTheme.NoActionBar" />
