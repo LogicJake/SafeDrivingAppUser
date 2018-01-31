@@ -158,7 +158,5 @@ public class Ride extends AppCompatActivity {
             }
         });
         selectRegion.show();
-
     }
-
 }
