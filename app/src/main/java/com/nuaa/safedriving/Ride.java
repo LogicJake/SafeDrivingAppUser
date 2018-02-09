@@ -1,6 +1,7 @@
 package com.nuaa.safedriving;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,6 +33,7 @@ public class Ride extends AppCompatActivity {
     JSONArray data2 = new JSONArray();
     Boolean isHave1 = false;
     Boolean isHave2 = false;
+    Button finsh;
 
     //重力传感器
     private SensorEventListener sensorEventListener = new SensorEventListener() {
@@ -92,6 +95,7 @@ public class Ride extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride);
         backup = (ImageView)findViewById(R.id.backup);
+        finsh = (Button)findViewById(R.id.finish);
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);        //传感器
         chooseSeat();
         backup.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,15 @@ public class Ride extends AppCompatActivity {
             }
         });
 
+
+        finsh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Ride.this, Surprise.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     public void StartRecord() {     //注册传感器

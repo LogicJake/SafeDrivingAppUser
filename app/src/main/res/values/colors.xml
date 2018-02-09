@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#595959</color>
     <color name="colorPrimaryDark">#4F4F4F</color>
+    <color name="textColorPrimary">#000000</color>
     <color name="colorAccent">#000000</color>
     <color name="LightGrey">#D3D3D3</color>
     <color name="Gainsboro">#DCDCDC</color>

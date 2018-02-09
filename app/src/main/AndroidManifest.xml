@@ -35,8 +35,7 @@
             android:label="@string/title_activity_main" />
         <activity
             android:name=".FullInEmail"
-            android:label="邮箱验证"
-            />
+            android:label="邮箱验证" />
         <activity
             android:name=".setting"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -44,7 +43,12 @@
             android:name=".Ride"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MyCalendar" />
-        <activity android:name=".ShuttleInfo"></activity>
+        <activity android:name=".ShuttleInfo" />
+        <activity
+            android:name=".Surprise"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
     </application>
 
 </manifest>
