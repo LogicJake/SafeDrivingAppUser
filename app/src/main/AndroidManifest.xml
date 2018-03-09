@@ -40,13 +40,14 @@
         <activity android:name=".ShuttleInfo" />
         <activity
             android:name=".Surprise"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.Full">
+
+        </activity>
         <activity
             android:name=".Startpage"
             android:theme="@style/AppTheme.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

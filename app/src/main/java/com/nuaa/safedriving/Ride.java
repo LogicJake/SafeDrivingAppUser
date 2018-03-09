@@ -1,5 +1,4 @@
 package com.nuaa.safedriving;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 public class Ride extends AppCompatActivity {
 
     private ImageView backup;

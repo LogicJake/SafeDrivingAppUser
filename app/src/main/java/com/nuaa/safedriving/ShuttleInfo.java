@@ -91,14 +91,14 @@ public class ShuttleInfo extends AppCompatActivity {
             }
         });
 
-        mswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mListData.clear();
-                getInfo(type,date);         //获取班车信息
-                mswipeRefreshLayout.setRefreshing(false);
-            }
-        });
+//        mswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                mListData.clear();
+//                getInfo(type,date);         //获取班车信息
+//                mswipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
     }
 
     protected void getInfo(final int type,String date)  {

@@ -21,4 +21,8 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/guide</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.Full">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>
