@@ -21,15 +21,9 @@
         <activity
             android:name=".SignUp"
             android:label="@string/sign_up" />
-        <activity android:name=".Login">
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"
-                    android:label="@string/login" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".Login"
+            android:label="@string/login"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
@@ -46,8 +40,15 @@
         <activity android:name=".ShuttleInfo" />
         <activity
             android:name=".Surprise"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Startpage"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
