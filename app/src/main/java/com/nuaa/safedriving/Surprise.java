@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import java.util.Random;
 
 public class Surprise extends AppCompatActivity {
-    private int num = 3;
+    private int num = 20;
     private LinearLayout layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

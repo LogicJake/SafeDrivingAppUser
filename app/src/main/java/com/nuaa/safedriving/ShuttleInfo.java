@@ -125,14 +125,18 @@ public class ShuttleInfo extends AppCompatActivity {
                                     map.put("destination", "明故宫校区");
                                     if (temp.getString("east").equals("1"))
                                         map.put("departure", "将军路校区东区");
-                                    if (temp.getString("lancui").equals("1"))
+                                    else if (temp.getString("lancui").equals("1"))
                                         map.put("departure", "揽翠苑");
+                                    else
+                                        map.put("departure", "将军路校区西区");
                                 } else {
                                     map.put("departure", "明故宫校区");
                                     if (temp.getString("east").equals("1"))
                                         map.put("destination", "将军路校区东区");
-                                    if (temp.getString("lancui").equals("1"))
+                                    else if (temp.getString("lancui").equals("1"))
                                         map.put("destination", "揽翠苑");
+                                    else
+                                        map.put("destination", "将军路校区西区");
                                 }
                                 Calendar c = Calendar.getInstance();
                                 c.setTime(date_d);

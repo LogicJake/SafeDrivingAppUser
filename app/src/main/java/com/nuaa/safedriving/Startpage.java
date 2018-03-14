@@ -68,7 +68,7 @@ public class Startpage extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-            }, 3000);
+            }, 2000);
         } else {                                    //自动登陆
             new Thread(new Runnable() {
                 @Override
