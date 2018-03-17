@@ -1,6 +1,7 @@
 package com.nuaa.safedriving;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,9 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
@@ -32,13 +36,13 @@ public class ShuttleInfo extends AppCompatActivity {
     private SimpleAdapter mSchedule;
     private ListView lv;
     private SwipeRefreshLayout mswipeRefreshLayout;
+    private SweetAlertDialog pDialog;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    System.out.println(mListData.size());
                     if (mListData.size() == 0)
                         noInfo.setVisibility(View.VISIBLE);
                     else
@@ -51,6 +55,7 @@ public class ShuttleInfo extends AppCompatActivity {
                     lv.setAdapter(mSchedule);
                     setListViewHeightBasedOnChildren(lv);
                     mSchedule.notifyDataSetChanged();
+                    pDialog.cancel();
                     break;
             }
         }
@@ -64,20 +69,26 @@ public class ShuttleInfo extends AppCompatActivity {
         noInfo = (TextView)findViewById(R.id.noInfo);
         lv = (ListView)findViewById(R.id.shuttlelist);
         mswipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.sv);
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
 
         Intent intent =getIntent();
         final int type = intent.getIntExtra("type",1);
         final String date = intent.getStringExtra("date");
+
         getInfo(type,date);         //获取班车信息
+
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                System.out.println(scrollView.getScrollY());
                 if (event.getAction() == MotionEvent.ACTION_UP && scrollView.getScrollY() > 0)
                     up.setVisibility(View.VISIBLE);
                 return false;
             }
         });
+
         up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,24 +102,24 @@ public class ShuttleInfo extends AppCompatActivity {
             }
         });
 
-//        mswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
+        mswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
 //                mListData.clear();
 //                getInfo(type,date);         //获取班车信息
-//                mswipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
+                mswipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     protected void getInfo(final int type,String date)  {
+        pDialog.show();
         date = date.split(" ")[0];
         final String fdate = date;
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
         try {
             final Date date_d = format.parse(date);
             final long time = date_d.getTime()/1000;
-            System.out.println(time);
             new Thread(new Runnable(){
                 @Override
                 public void run()
@@ -172,8 +183,8 @@ public class ShuttleInfo extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         //获取listview的适配器
         ListAdapter listAdapter = listView.getAdapter(); //item的高度
