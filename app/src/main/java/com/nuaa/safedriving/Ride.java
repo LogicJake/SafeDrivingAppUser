@@ -1,27 +1,38 @@
 package com.nuaa.safedriving;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-public class Ride extends AppCompatActivity {
+import static android.view.Gravity.BOTTOM;
+import static android.view.Gravity.CENTER_HORIZONTAL;
 
+public class Ride extends AppCompatActivity {
+    private int type;
+    private String date;
+    private String time;
+    private String tag;
     private ImageView backup;
     private SensorManager sensorManager;
     String Region = null;
@@ -32,6 +43,30 @@ public class Ride extends AppCompatActivity {
     Boolean isHave1 = false;
     Boolean isHave2 = false;
     Button finsh;
+    private FinishPopupWindow menuWindow;
+    private SharedPreferences preferences;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    float rate = msg.getData().getFloat("rate");
+                    String suggestion = msg.getData().getString("suggestion");
+                    String token = preferences.getString("token",null);
+                    postComment(token,rate,suggestion);
+                    break;
+                case 1:
+                    boolean flag = (boolean)msg.obj;
+                    if(flag)
+                    {
+                        Intent intent = new Intent(Ride.this,Surprise.class);
+                        startActivity(intent);
+                        finish();
+                    }
+            }
+        }
+    };
 
     //重力传感器
     private SensorEventListener sensorEventListener = new SensorEventListener() {
@@ -95,7 +130,17 @@ public class Ride extends AppCompatActivity {
         backup = (ImageView)findViewById(R.id.backup);
         finsh = (Button)findViewById(R.id.finish);
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);        //传感器
+        preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+
         chooseSeat();
+
+        Intent intent =getIntent();
+        type = intent.getIntExtra("type",0);
+        date = intent.getStringExtra("date");
+        time = intent.getStringExtra("time");
+
+        tag = type+date+time;       //评论唯一标志
+
         backup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,11 +152,33 @@ public class Ride extends AppCompatActivity {
         finsh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Ride.this, Surprise.class);
-                startActivity(intent);
-                finish();
+                menuWindow = new FinishPopupWindow(Ride.this,handler);
+                //显示窗口
+                menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
             }
         });
+    }
+
+    public void postComment(final String token,final float rate,final String suggestion){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean flag = NewServices.insertComment(token,rate,suggestion,tag);
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = flag;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return false;
     }
 
     public void StartRecord() {     //注册传感器

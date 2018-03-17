@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -37,6 +38,8 @@ public class ShuttleInfo extends AppCompatActivity {
     private ListView lv;
     private SwipeRefreshLayout mswipeRefreshLayout;
     private SweetAlertDialog pDialog;
+    private int type;
+    private String date;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -55,6 +58,20 @@ public class ShuttleInfo extends AppCompatActivity {
                     lv.setAdapter(mSchedule);
                     setListViewHeightBasedOnChildren(lv);
                     mSchedule.notifyDataSetChanged();
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String time = ((TextView) view.findViewById(R.id.time)).getText().toString();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("type", type);
+                            bundle.putString("date",date.split(" ")[0]);
+                            bundle.putString("time",time);
+                            Intent intent = new Intent();
+                            intent.putExtras(bundle);
+                            intent.setClass(ShuttleInfo.this, Ride.class);
+                            startActivity(intent);
+                        }
+                    });
                     pDialog.cancel();
                     break;
             }
@@ -75,8 +92,8 @@ public class ShuttleInfo extends AppCompatActivity {
         pDialog.setCancelable(false);
 
         Intent intent =getIntent();
-        final int type = intent.getIntExtra("type",1);
-        final String date = intent.getStringExtra("date");
+        type = intent.getIntExtra("type",1);
+        date = intent.getStringExtra("date");
 
         getInfo(type,date);         //获取班车信息
 

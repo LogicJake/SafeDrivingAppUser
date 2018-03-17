@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:text="评价"
+            android:layout_marginTop="10dp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/LightGrey" />
+
+        <RatingBar
+            android:id="@+id/star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:stepSize="1.0"
+            android:numStars="5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/LightGrey"
+            android:layout_marginBottom="20dp"
+            android:text="您对本次服务满意吗"/>
+
+        <EditText
+            android:id="@+id/suggestion"
+            android:background="@drawable/edittext"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:minLines="3"
+            android:maxLines="3"
+            android:gravity="left|top"
+            android:ems="10"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            android:inputType="textMultiLine" />
+        <Button
+            android:id="@+id/submit"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="匿名提交"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

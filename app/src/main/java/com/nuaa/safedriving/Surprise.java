@@ -16,7 +16,6 @@ public class Surprise extends AppCompatActivity {
         layout = (LinearLayout)findViewById(R.id.layout);
         Random random = new Random();
         int i = random.nextInt(num)+1;
-        System.out.println(i);
         String name = "p"+i;
         int resId = getResources().getIdentifier(name, "drawable", "com.nuaa.safedriving");
         layout.setBackgroundResource(resId);
