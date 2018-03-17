@@ -64,6 +64,14 @@ public class Ride extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
+                    else {
+                        Toast.makeText(Ride.this, "提交失败请重新提交点评", Toast.LENGTH_LONG).show();
+                        menuWindow = new FinishPopupWindow(Ride.this,handler);
+                        //显示窗口
+                        menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                        menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                        menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    }
             }
         }
     };

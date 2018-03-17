@@ -493,13 +493,17 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                return new JSONObject(baos.toString()).getBoolean("code");
+                int code = new JSONObject(baos.toString()).getInt("code");
+                if(code == 0)
+                    return true;
+                else
+                    return false;
             }
             else
                 return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 }
