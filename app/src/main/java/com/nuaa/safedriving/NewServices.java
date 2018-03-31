@@ -92,7 +92,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                jsonObject = new JSONObject(baos.toString()).getJSONObject("data").getJSONObject("result");
+                jsonObject = new JSONObject(baos.toString()).getJSONObject("data");
             }
         } catch (Exception e) {
             e.printStackTrace();

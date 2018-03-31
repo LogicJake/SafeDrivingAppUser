@@ -95,7 +95,31 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:background="@color/LightGrey"  />
+            <TableRow
+                android:id="@+id/mail_all"
+                android:clickable="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="18dp">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/mail"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:textSize="18dp" />
+            </TableRow>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:background="@color/LightGrey"  />
             <!--<View-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="1px"-->

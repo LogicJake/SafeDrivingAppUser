@@ -18,14 +18,18 @@ public class Startpage extends AppCompatActivity {
             if(result != null) {
                 int status = -1;
                 String token = null;
+                String email = null;
+                int id = 0;
                 try {
                     status = result.getInt("status");
                     token = result.getString("token");
+                    email = result.getString("email");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if (status == 1) {      //登陆成功，获取最新的token
                     editor.putString("token",token);
+                    editor.putString("email",email);
                     editor.commit();
                     Intent intent = new Intent(Startpage.this,MainActivity.class);
                     startActivity(intent);

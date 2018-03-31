@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity {
                     String password = editPassword.getText().toString().trim();
                     int status = -1;
                     int id = -1;
-                    int email = -1;
+                    String email = null;
                     String token = null;
                     super.handleMessage(msg);
                     JSONObject result = (JSONObject) msg.obj;
@@ -67,7 +67,7 @@ public class Login extends AppCompatActivity {
                             status = result.getInt("status");
                             id = result.getInt("id");
                             token = result.getString("token");
-                            email = result.getInt("email");
+                            email = result.getString("email");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -78,16 +78,18 @@ public class Login extends AppCompatActivity {
                                 editor.putString("userPassword", password);
                                 editor.putInt("id", id);
                                 editor.putString("token",token);
+                                editor.putString("email",email);
                                 editor.commit();
                             } else {        //不自动登陆清除数据
                                 editor.putString("userName", name);
                                 editor.putInt("id", id);
                                 editor.putString("token",token);
+                                editor.putString("email",email);
                                 editor.remove("userPassword");
                                 editor.commit();
                             }
                             pDialog.cancel();
-                            if (email == 1) {
+                            if (email.length() > 3) {
                                 Intent intent = new Intent(Login.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();

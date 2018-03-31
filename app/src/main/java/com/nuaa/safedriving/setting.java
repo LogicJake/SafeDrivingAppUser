@@ -123,6 +123,7 @@ public class setting extends AppCompatActivity {
     private TextView name;
     private SharedPreferences.Editor editor;
     private Button exit;
+    private TextView mail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +132,7 @@ public class setting extends AppCompatActivity {
         avator = (CircleImageView)findViewById(R.id.avator);
         name = (TextView)findViewById(R.id.name);
         exit = (Button)findViewById(R.id.exit);
+        mail = (TextView)findViewById(R.id.mail);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(setting.this).build();
@@ -145,7 +147,7 @@ public class setting extends AppCompatActivity {
         if (avator_content != null)
             avator.setImageBitmap(avator_content);
         name.setText(preferences.getString("userName","guest"));
-
+        mail.setText(preferences.getString("email","未设置"));
 
         backup.setOnClickListener(new View.OnClickListener() {
             @Override
