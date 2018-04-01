@@ -123,18 +123,17 @@ public class Login extends AppCompatActivity {
                     break;
                 case 1:
                     JSONObject inf = (JSONObject) msg.obj;
-                    String uid = null;
                     String token2 = null;
                     String email2 = null;
                     int status2 = -1;
                     try {
-                        uid = inf.getString("id");
+                        status2 = inf.getInt("status");
                         token2 = inf.getString("token");
                         email2 = inf.getString("email");
-                        status2 = inf.getInt("status");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    System.out.println(status2);
                     if (status2 == -1){
                         pDialog.cancel();
                         Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();

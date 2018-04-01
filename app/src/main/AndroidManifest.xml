@@ -50,7 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CheckCode"></activity>
+        <activity
+            android:name=".CheckCode"
+            android:label="找回密码" >
+        </activity>
     </application>
 
 </manifest>
