@@ -125,26 +125,35 @@ public class Login extends AppCompatActivity {
                     JSONObject inf = (JSONObject) msg.obj;
                     String uid = null;
                     String token2 = null;
+                    String email2 = null;
+                    int status2 = -1;
                     try {
-                        uid = inf.getString("user_id");
+                        uid = inf.getString("id");
                         token2 = inf.getString("token");
+                        email2 = inf.getString("email");
+                        status2 = inf.getInt("status");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    if (uid == null){
+                    if (status2 == -1){
                         pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();}
-                    else if (uid.equals("0")) {
+                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    }
+                    else if (status2 == 2){
+                        pDialog.cancel();
+                        Toast.makeText(Login.this, "未设置邮箱无法找回密码", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(status2 == 0){
                         pDialog.cancel();
                         Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT).show();
                     }
                     else{
                         pDialog.cancel();
                         editor.putString("token",token2);
+                        editor.putString("email",email2);
                         editor.commit();
-                        //Intent intent = new Intent(Login.this, CheckID.class);
-                        System.out.println(uid);
-                        //startActivity(intent);
+                        Intent intent = new Intent(Login.this, CheckCode.class);
+                        startActivity(intent);
                     }
                     break;
             }
@@ -268,11 +277,10 @@ public class Login extends AppCompatActivity {
                                 public void run()
                                 {
                                     String name = et.getText().toString();
-                                    JSONObject uid = NewServices.gettoken(name);
-                                    System.out.println(uid);
+                                    JSONObject email = NewServices.forgetPassd(name);
                                     Message msg = new Message();
                                     msg.what = 1;
-                                    msg.obj = uid;
+                                    msg.obj = email;
                                     handler.sendMessage(msg);
                                 }
                             }).start();

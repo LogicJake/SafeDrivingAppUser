@@ -198,7 +198,7 @@ public class NewServices {
         return true;
     }
 
-    public static JSONObject gettoken(String name) {
+    public static JSONObject forgetPassd(String name) {
         JSONObject res = null;
         try {
             String path = rooturl+"index.php?_action=getForgetpasswd&user_name="+name;
