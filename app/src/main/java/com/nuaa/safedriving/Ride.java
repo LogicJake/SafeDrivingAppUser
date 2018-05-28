@@ -2,6 +2,7 @@ package com.nuaa.safedriving;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,13 +23,22 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.nuaa.safedriving.util.DynamicLineChartManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
 
-public class Ride extends AppCompatActivity {
+public class Ride extends AppCompatActivity implements View.OnClickListener{
     private int type;
     private String date;
     private String time;
@@ -45,6 +55,16 @@ public class Ride extends AppCompatActivity {
     Button finsh;
     private FinishPopupWindow menuWindow;
     private SharedPreferences preferences;
+
+    private DynamicLineChartManager dynamicLineChartManager1;
+    private DynamicLineChartManager dynamicLineChartManager2;
+    private List<Float> list1 = new ArrayList<>(); //数据集合
+    private List<Float> list2 = new ArrayList<>(); //数据集合
+    private List<String> names = new ArrayList<>(); //折线名字集合
+    private List<Integer> colour = new ArrayList<>();//折线颜色集合
+
+    private int count1 = 10;
+    private int count2 = 10;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -76,7 +96,6 @@ public class Ride extends AppCompatActivity {
         }
     };
 
-    //重力传感器
     private SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -92,6 +111,16 @@ public class Ride extends AppCompatActivity {
                 tmp.put("x",""+x);
                 tmp.put("y",""+y);
                 tmp.put("z",""+z);
+                if(count1 == 10)
+                {
+                    list1.add(x);
+                    list1.add(y);
+                    list1.add(z);
+                    dynamicLineChartManager1.addEntry(list1);
+                    list1.clear();
+                    count1 = 0;
+                }
+                count1++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -109,9 +138,9 @@ public class Ride extends AppCompatActivity {
         public void onSensorChanged(SensorEvent event) {
             // 传感器信息改变时执行该方法
             float[] values = event.values;
-            float x = values[0]; //
-            float y = values[1]; //
-            float z = values[2]; //
+            float x = values[0];
+            float y = values[1];
+            float z = values[2];
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
@@ -119,6 +148,15 @@ public class Ride extends AppCompatActivity {
                 tmp.put("x",""+x);
                 tmp.put("y",""+y);
                 tmp.put("z",""+z);
+                if(count2 == 10) {
+                    list2.add(x);
+                    list2.add(y);
+                    list2.add(z);
+                    dynamicLineChartManager2.addEntry(list2);
+                    list2.clear();
+                    count2 = 0;
+                }
+                count2++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -149,25 +187,10 @@ public class Ride extends AppCompatActivity {
 
         tag = type+date+time;       //评论唯一标志
 
-        backup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backup.setOnClickListener(this);
 
+        finsh.setOnClickListener(this);
 
-        finsh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menuWindow = new FinishPopupWindow(Ride.this,handler);
-                //显示窗口
-                menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
-                menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-            }
-        });
     }
 
     public void postComment(final String token,final float rate,final String suggestion){
@@ -182,6 +205,7 @@ public class Ride extends AppCompatActivity {
             }
         }).start();
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             return true;
@@ -239,10 +263,47 @@ public class Ride extends AppCompatActivity {
                     Toast.makeText(Ride.this, "没有选择区域，请重新提交！", Toast.LENGTH_SHORT).show();
                     chooseSeat();
                 }
-                else
+                else {
                     StartRecord();          //一切正常采集数据
+                    init();
+                }
             }
         });
         selectRegion.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.finish:
+                menuWindow = new FinishPopupWindow(Ride.this,handler);
+                //显示窗口
+                menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                break;
+            case R.id.backup:
+                finish();
+                break;
+        }
+    }
+
+    public void init(){
+        LineChart GYROSCOPE = (LineChart)findViewById(R.id.GYROSCOPE);
+        LineChart ACCELEROMETER = (LineChart)findViewById(R.id.ACCELEROMETER);
+
+        names.add("x");
+        names.add("y");
+        names.add("z");
+        //折线颜色
+        colour.add(Color.CYAN);
+        colour.add(Color.GREEN);
+        colour.add(Color.BLUE);
+
+        dynamicLineChartManager1 = new DynamicLineChartManager(GYROSCOPE, names, colour);
+        dynamicLineChartManager1.setDescription("陀螺仪数据");
+        dynamicLineChartManager2 = new DynamicLineChartManager(ACCELEROMETER, names, colour);
+        dynamicLineChartManager2.setDescription("加速度传感器数据");
+
     }
 }

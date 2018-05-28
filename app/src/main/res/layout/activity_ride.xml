@@ -36,12 +36,38 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/finish"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="陀螺仪数据"
+            android:layout_gravity="center"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/GYROSCOPE"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="加速度数据"
+            android:layout_gravity="center"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/ACCELEROMETER"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="结束" />
     </LinearLayout>
 </LinearLayout>
