@@ -1,4 +1,5 @@
 package com.nuaa.safedriving;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +39,7 @@ import java.util.List;
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
 
-public class Ride extends AppCompatActivity implements View.OnClickListener{
+public class Ride extends AppCompatActivity implements View.OnClickListener {
     private int type;
     private String date;
     private String time;
@@ -65,32 +66,32 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
 
     private int count1 = 10;
     private int count2 = 10;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     float rate = msg.getData().getFloat("rate");
                     String suggestion = msg.getData().getString("suggestion");
-                    String token = preferences.getString("token",null);
-                    postComment(token,rate,suggestion);
+                    String token = preferences.getString("token", null);
+                    postComment(token, rate, suggestion);
                     break;
                 case 1:
-                    boolean flag = (boolean)msg.obj;
-                    if(flag)
-                    {
-                        Intent intent = new Intent(Ride.this,Surprise.class);
+                    boolean flag = (boolean) msg.obj;
+                    if (flag) {
+                        Intent intent = new Intent(Ride.this, Surprise.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(Ride.this, "提交失败请重新提交点评", Toast.LENGTH_LONG).show();
-                        menuWindow = new FinishPopupWindow(Ride.this,handler);
+                        menuWindow = new FinishPopupWindow(Ride.this, handler);
                         //显示窗口
-                        menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                        menuWindow.showAtLocation(Ride.this.findViewById(R.id.head),
+                            BOTTOM | CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
                         menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                        menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                        menuWindow.setSoftInputMode(
+                            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     }
             }
         }
@@ -107,12 +108,11 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time",""+timeStamp);
-                tmp.put("x",""+x);
-                tmp.put("y",""+y);
-                tmp.put("z",""+z);
-                if(count1 == 10)
-                {
+                tmp.put("time", "" + timeStamp);
+                tmp.put("x", "" + x);
+                tmp.put("y", "" + y);
+                tmp.put("z", "" + z);
+                if (count1 == 10) {
                     list1.add(x);
                     list1.add(y);
                     list1.add(z);
@@ -144,11 +144,11 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time",""+timeStamp);
-                tmp.put("x",""+x);
-                tmp.put("y",""+y);
-                tmp.put("z",""+z);
-                if(count2 == 10) {
+                tmp.put("time", "" + timeStamp);
+                tmp.put("x", "" + x);
+                tmp.put("y", "" + y);
+                tmp.put("z", "" + z);
+                if (count2 == 10) {
                     list2.add(x);
                     list2.add(y);
                     list2.add(z);
@@ -173,31 +173,30 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride);
-        backup = (ImageView)findViewById(R.id.backup);
-        finsh = (Button)findViewById(R.id.finish);
-        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);        //传感器
+        backup = (ImageView) findViewById(R.id.backup);
+        finsh = (Button) findViewById(R.id.finish);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);        //传感器
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
 
         chooseSeat();
 
-        Intent intent =getIntent();
-        type = intent.getIntExtra("type",0);
+        Intent intent = getIntent();
+        type = intent.getIntExtra("type", 0);
         date = intent.getStringExtra("date");
         time = intent.getStringExtra("time");
 
-        tag = type+date+time;       //评论唯一标志
+        tag = type + date + time;       //评论唯一标志
 
         backup.setOnClickListener(this);
 
         finsh.setOnClickListener(this);
-
     }
 
-    public void postComment(final String token,final float rate,final String suggestion){
+    public void postComment(final String token, final float rate, final String suggestion) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean flag = NewServices.insertComment(token,rate,suggestion,tag);
+                boolean flag = NewServices.insertComment(token, rate, suggestion, tag);
                 Message msg = new Message();
                 msg.what = 1;
                 msg.obj = flag;
@@ -216,26 +215,31 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
     public void StartRecord() {     //注册传感器
         if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
             isHave1 = true;
-            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), sensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(sensorEventListener,
+                sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
+                sensorManager.SENSOR_DELAY_NORMAL);
             // 第一个参数是Listener，第二个参数是所得传感器类型，第三个参数值获取传感器信息的频率
         }
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
             isHave2 = true;
-            sensorManager.registerListener(sensorEventListener2, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(sensorEventListener2,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                sensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
-    public void chooseSeat(){
+    public void chooseSeat() {
         final AlertDialog.Builder selectRegion = new AlertDialog.Builder(Ride.this);
-        final View dialogView = LayoutInflater.from(Ride.this).inflate(R.layout.dialog_region,null);
+        final View dialogView =
+            LayoutInflater.from(Ride.this).inflate(R.layout.dialog_region, null);
         selectRegion.setTitle("根据图示选择座位位置");
         selectRegion.setCancelable(false);
         selectRegion.setView(dialogView);
         RadioGroup result = (RadioGroup) dialogView.findViewById(R.id.select);
-        final RadioButton A = (RadioButton)dialogView.findViewById(R.id.A);
-        final RadioButton B = (RadioButton)dialogView.findViewById(R.id.B);
-        final RadioButton C = (RadioButton)dialogView.findViewById(R.id.C);
-        final RadioButton D = (RadioButton)dialogView.findViewById(R.id.D);
+        final RadioButton A = (RadioButton) dialogView.findViewById(R.id.A);
+        final RadioButton B = (RadioButton) dialogView.findViewById(R.id.B);
+        final RadioButton C = (RadioButton) dialogView.findViewById(R.id.C);
+        final RadioButton D = (RadioButton) dialogView.findViewById(R.id.D);
         result.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -259,11 +263,10 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
         selectRegion.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(Region == null) {
+                if (Region == null) {
                     Toast.makeText(Ride.this, "没有选择区域，请重新提交！", Toast.LENGTH_SHORT).show();
                     chooseSeat();
-                }
-                else {
+                } else {
                     StartRecord();          //一切正常采集数据
                     init();
                 }
@@ -274,11 +277,12 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish:
-                menuWindow = new FinishPopupWindow(Ride.this,handler);
+                menuWindow = new FinishPopupWindow(Ride.this, handler);
                 //显示窗口
-                menuWindow.showAtLocation(Ride.this.findViewById(R.id.head), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                menuWindow.showAtLocation(Ride.this.findViewById(R.id.head),
+                    BOTTOM | CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
                 menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
                 menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 break;
@@ -288,9 +292,9 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    public void init(){
-        LineChart GYROSCOPE = (LineChart)findViewById(R.id.GYROSCOPE);
-        LineChart ACCELEROMETER = (LineChart)findViewById(R.id.ACCELEROMETER);
+    public void init() {
+        LineChart GYROSCOPE = (LineChart) findViewById(R.id.GYROSCOPE);
+        LineChart ACCELEROMETER = (LineChart) findViewById(R.id.ACCELEROMETER);
 
         names.add("x");
         names.add("y");
@@ -304,6 +308,5 @@ public class Ride extends AppCompatActivity implements View.OnClickListener{
         dynamicLineChartManager1.setDescription("陀螺仪数据");
         dynamicLineChartManager2 = new DynamicLineChartManager(ACCELEROMETER, names, colour);
         dynamicLineChartManager2.setDescription("加速度传感器数据");
-
     }
 }

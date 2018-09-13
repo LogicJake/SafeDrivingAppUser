@@ -87,9 +87,6 @@ public class DynamicLineChartManager {
 
     /**
      * 初始化折线(一条线)
-     *
-     * @param name
-     * @param color
      */
     private void initLineDataSet(String name, int color) {
 
@@ -108,14 +105,10 @@ public class DynamicLineChartManager {
         lineData = new LineData();
         lineChart.setData(lineData);
         lineChart.invalidate();
-
     }
 
     /**
      * 初始化折线（多条线）
-     *
-     * @param names
-     * @param colors
      */
     private void initLineDataSet(List<String> names, List<Integer> colors) {
 
@@ -133,7 +126,6 @@ public class DynamicLineChartManager {
             lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineDataSet.setValueTextSize(10f);
             lineDataSets.add(lineDataSet);
-
         }
         //添加一个空的 LineData
         lineData = new LineData();
@@ -143,8 +135,6 @@ public class DynamicLineChartManager {
 
     /**
      * 动态添加数据（一条折线图）
-     *
-     * @param number
      */
     public void addEntry(int number) {
 
@@ -173,8 +163,6 @@ public class DynamicLineChartManager {
 
     /**
      * 动态添加数据（多条折线图）
-     *
-     * @param numbers
      */
     public void addEntry(List<Float> numbers) {
 
@@ -198,10 +186,6 @@ public class DynamicLineChartManager {
 
     /**
      * 设置Y轴值
-     *
-     * @param max
-     * @param min
-     * @param labelCount
      */
     public void setYAxis(float max, float min, int labelCount) {
         if (max < min) {
@@ -219,9 +203,6 @@ public class DynamicLineChartManager {
 
     /**
      * 设置高限制线
-     *
-     * @param high
-     * @param name
      */
     public void setHightLimitLine(float high, String name, int color) {
         if (name == null) {
@@ -238,9 +219,6 @@ public class DynamicLineChartManager {
 
     /**
      * 设置低限制线
-     *
-     * @param low
-     * @param name
      */
     public void setLowLimitLine(int low, String name) {
         if (name == null) {
@@ -255,8 +233,6 @@ public class DynamicLineChartManager {
 
     /**
      * 设置描述信息
-     *
-     * @param str
      */
     public void setDescription(String str) {
         Description description = new Description();

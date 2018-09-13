@@ -2,27 +2,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
-    android:focusableInTouchMode="true">
+    >
     <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/sv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        >
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
             <LinearLayout
-                android:descendantFocusability="blocksDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="vertical"
+                >
 
                 <ListView
                     android:id="@+id/shuttlelist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></ListView>
+                    android:layout_height="wrap_content"
+                    ></ListView>
                 <TextView
                     android:id="@+id/noInfo"
                     android:layout_width="wrap_content"
@@ -30,7 +35,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:text="没有信息"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    />
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -43,6 +49,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
+        android:src="@drawable/up"
         android:visibility="gone"
-        android:src="@drawable/up" />
+        />
 </RelativeLayout>

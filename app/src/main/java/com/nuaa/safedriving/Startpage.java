@@ -15,7 +15,7 @@ public class Startpage extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             JSONObject result = (JSONObject) msg.obj;
-            if(result != null) {
+            if (result != null) {
                 int status = -1;
                 String token = null;
                 String email = null;
@@ -28,32 +28,28 @@ public class Startpage extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (status == 1) {      //登陆成功，获取最新的token
-                    editor.putString("token",token);
-                    editor.putString("email",email);
+                    editor.putString("token", token);
+                    editor.putString("email", email);
                     editor.commit();
-                    Intent intent = new Intent(Startpage.this,MainActivity.class);
+                    Intent intent = new Intent(Startpage.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(Startpage.this, Login.class);     //登陆界面
                     startActivity(intent);
                     finish();
                 }
-                else
-                {
-                    Intent intent = new Intent(Startpage.this,Login.class);     //登陆界面
-                    startActivity(intent);
-                    finish();
-                }
-            }
-            else
-            {
-                Intent intent = new Intent(Startpage.this,Login.class);     //登陆界面
+            } else {
+                Intent intent = new Intent(Startpage.this, Login.class);     //登陆界面
                 startActivity(intent);
                 finish();
             }
-
         }
     };
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,14 +57,14 @@ public class Startpage extends AppCompatActivity {
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
 
-        final String name = preferences.getString("userName",null);
+        final String name = preferences.getString("userName", null);
         final String password = preferences.getString("userPassword", null);
-        if (name == null||password == null) {       //打开登陆界面
+        if (name == null || password == null) {       //打开登陆界面
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(Startpage.this,Login.class);
+                    Intent intent = new Intent(Startpage.this, Login.class);
                     startActivity(intent);
                     finish();
                 }

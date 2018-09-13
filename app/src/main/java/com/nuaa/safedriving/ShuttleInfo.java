@@ -46,26 +46,31 @@ public class ShuttleInfo extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    if (mListData.size() == 0)
+                    if (mListData.size() == 0) {
                         noInfo.setVisibility(View.VISIBLE);
-                    else
+                    } else {
                         noInfo.setVisibility(View.GONE);
+                    }
                     mSchedule = new SimpleAdapter(ShuttleInfo.this,
-                            mListData,//数据来源
-                            R.layout.info_list,//ListItem的XML实现
-                            new String[]{"time", "car_num", "departure", "destination","status"},
-                            new int[]{R.id.time, R.id.carnum, R.id.departure, R.id.destination,R.id.status});
+                        mListData,//数据来源
+                        R.layout.info_list,//ListItem的XML实现
+                        new String[] { "time", "car_num", "departure", "destination", "status" },
+                        new int[] {
+                            R.id.time, R.id.carnum, R.id.departure, R.id.destination, R.id.status
+                        });
                     lv.setAdapter(mSchedule);
                     setListViewHeightBasedOnChildren(lv);
                     mSchedule.notifyDataSetChanged();
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            String time = ((TextView) view.findViewById(R.id.time)).getText().toString();
+                        public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+                            String time =
+                                ((TextView) view.findViewById(R.id.time)).getText().toString();
                             Bundle bundle = new Bundle();
                             bundle.putInt("type", type);
-                            bundle.putString("date",date.split(" ")[0]);
-                            bundle.putString("time",time);
+                            bundle.putString("date", date.split(" ")[0]);
+                            bundle.putString("time", time);
                             Intent intent = new Intent();
                             intent.putExtras(bundle);
                             intent.setClass(ShuttleInfo.this, Ride.class);
@@ -81,27 +86,28 @@ public class ShuttleInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shuttle_info);
-        up = (ImageView)findViewById(R.id.up);
-        scrollView = (ScrollView)findViewById(R.id.scrollView);
-        noInfo = (TextView)findViewById(R.id.noInfo);
-        lv = (ListView)findViewById(R.id.shuttlelist);
-        mswipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.sv);
+        up = (ImageView) findViewById(R.id.up);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        noInfo = (TextView) findViewById(R.id.noInfo);
+        lv = (ListView) findViewById(R.id.shuttlelist);
+        mswipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sv);
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
 
-        Intent intent =getIntent();
-        type = intent.getIntExtra("type",1);
+        Intent intent = getIntent();
+        type = intent.getIntExtra("type", 1);
         date = intent.getStringExtra("date");
 
-        getInfo(type,date);         //获取班车信息
+        getInfo(type, date);         //获取班车信息
 
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP && scrollView.getScrollY() > 0)
+                if (event.getAction() == MotionEvent.ACTION_UP && scrollView.getScrollY() > 0) {
                     up.setVisibility(View.VISIBLE);
+                }
                 return false;
             }
         });
@@ -122,27 +128,26 @@ public class ShuttleInfo extends AppCompatActivity {
         mswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                mListData.clear();
-//                getInfo(type,date);         //获取班车信息
+                //                mListData.clear();
+                //                getInfo(type,date);         //获取班车信息
                 mswipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    protected void getInfo(final int type,String date)  {
+    protected void getInfo(final int type, String date) {
         pDialog.show();
         date = date.split(" ")[0];
         final String fdate = date;
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
         try {
             final Date date_d = format.parse(date);
-            final long time = date_d.getTime()/1000;
-            new Thread(new Runnable(){
+            final long time = date_d.getTime() / 1000;
+            new Thread(new Runnable() {
                 @Override
-                public void run()
-                {
-                    JSONArray res = NewServices.getInfo(type,time);
-                    if(res!=null) {
+                public void run() {
+                    JSONArray res = NewServices.getInfo(type, time);
+                    if (res != null) {
                         for (int i = 0; i < res.length(); i++) {
                             try {
                                 JSONObject temp = (JSONObject) res.get(i);
@@ -151,36 +156,44 @@ public class ShuttleInfo extends AppCompatActivity {
                                 map.put("car_num", temp.getString("car_num") + "辆");
                                 if (type == 1) {       //将军路出发
                                     map.put("destination", "明故宫校区");
-                                    if (temp.getString("east").equals("1"))
+                                    if (temp.getString("east").equals("1")) {
                                         map.put("departure", "将军路校区东区");
-                                    else if (temp.getString("lancui").equals("1"))
+                                    } else if (temp.getString("lancui").equals("1")) {
                                         map.put("departure", "揽翠苑");
-                                    else
+                                    } else {
                                         map.put("departure", "将军路校区西区");
+                                    }
                                 } else {
                                     map.put("departure", "明故宫校区");
-                                    if (temp.getString("east").equals("1"))
+                                    if (temp.getString("east").equals("1")) {
                                         map.put("destination", "将军路校区东区");
-                                    else if (temp.getString("lancui").equals("1"))
+                                    } else if (temp.getString("lancui").equals("1")) {
                                         map.put("destination", "揽翠苑");
-                                    else
+                                    } else {
                                         map.put("destination", "将军路校区西区");
+                                    }
                                 }
                                 Calendar c = Calendar.getInstance();
                                 c.setTime(date_d);
                                 Calendar c2 = Calendar.getInstance();
                                 c2.setTime(new Date());
-                                if (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)) {
+                                if (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                                    && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
+                                    && c.get(Calendar.DAY_OF_MONTH) == c2.get(
+                                    Calendar.DAY_OF_MONTH)) {
                                     long now_time = System.currentTimeMillis() / 1000;
                                     String date_s = fdate + " " + temp.getString("time");
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+                                    SimpleDateFormat format =
+                                        new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
 
-                                    if (format.parse(date_s).getTime() / 1000 <= now_time)
+                                    if (format.parse(date_s).getTime() / 1000 <= now_time) {
                                         map.put("status", "已发车");
-                                    else
+                                    } else {
                                         map.put("status", "未发车");
-                                } else
+                                    }
+                                } else {
                                     map.put("status", "未发车");
+                                }
                                 mListData.add(map);
                                 Message msg = new Message();
                                 msg.what = 1;
@@ -189,8 +202,7 @@ public class ShuttleInfo extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Message msg = new Message();
                         msg.what = 1;
                         handler.sendMessage(msg);
@@ -212,7 +224,7 @@ public class ShuttleInfo extends AppCompatActivity {
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0); //计算子项View 的宽高 //统计所有子项的总高度
-            totalHeight += listItem.getMeasuredHeight()+listView.getDividerHeight();
+            totalHeight += listItem.getMeasuredHeight() + listView.getDividerHeight();
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight;

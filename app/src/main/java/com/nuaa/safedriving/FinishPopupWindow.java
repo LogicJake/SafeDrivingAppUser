@@ -29,24 +29,24 @@ public class FinishPopupWindow extends PopupWindow {
     private float rate;
     private boolean isfirst = true;
 
-
     public FinishPopupWindow(final Activity context, final Handler handler) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popwindow_finsh, null);
         this.setContentView(mMenuView);
         this.setWidth(ViewGroup.LayoutParams.FILL_PARENT);
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
         star = (RatingBar) mMenuView.findViewById(R.id.star);
-        submit = (Button)mMenuView.findViewById(R.id.submit);
-        suggestion = (EditText)mMenuView.findViewById(R.id.suggestion);
+        submit = (Button) mMenuView.findViewById(R.id.submit);
+        suggestion = (EditText) mMenuView.findViewById(R.id.suggestion);
 
         star.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 rate = rating;
-                if (isfirst){
+                if (isfirst) {
                     submit.setVisibility(View.VISIBLE);
                     suggestion.setVisibility(View.VISIBLE);
                     isfirst = false;
@@ -59,14 +59,13 @@ public class FinishPopupWindow extends PopupWindow {
                 String context = suggestion.getText().toString();
                 Message msg = new Message();
                 msg.what = 0;
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putFloat("rate", rate);
-                bundle.putString("suggestion",context);
+                bundle.putString("suggestion", context);
                 msg.setData(bundle);
                 handler.sendMessage(msg);
                 dismiss();
             }
         });
     }
-
 }

@@ -35,33 +35,36 @@ public class UserInfo extends Fragment {
     private SharedPreferences preferences;
     private TextView name;
     private SwipeRefreshLayout mswipeRefreshLayout;
+
     public UserInfo() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_user_info,container,false);
-        setting = (LinearLayout)view.findViewById(R.id.setting);
-        avator = (CircleImageView)view.findViewById(R.id.avatar);
-        name = (TextView)view.findViewById(R.id.name);
-        mswipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.refresh);
+        Bundle savedInstanceState) {
+        final View view = LayoutInflater.from(getActivity())
+            .inflate(R.layout.fragment_user_info, container, false);
+        setting = (LinearLayout) view.findViewById(R.id.setting);
+        avator = (CircleImageView) view.findViewById(R.id.avatar);
+        name = (TextView) view.findViewById(R.id.name);
+        mswipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         preferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(view.getContext()).build();
+        ImageLoaderConfiguration config =
+            new ImageLoaderConfiguration.Builder(view.getContext()).build();
         ImageLoader.getInstance().init(config);
 
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .cacheInMemory(true)
-                .cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(300))
-                .imageScaleType(ImageScaleType.EXACTLY).build();
+            .imageScaleType(ImageScaleType.EXACTLY)
+            .cacheInMemory(true)
+            .cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(300))
+            .imageScaleType(ImageScaleType.EXACTLY).build();
 
         Bitmap avator_content = getBitmapFromSharedPreferences();
-        if (avator_content != null)
+        if (avator_content != null) {
             avator.setImageBitmap(avator_content);
-        name.setText(preferences.getString("userName","guest"));
+        }
+        name.setText(preferences.getString("userName", "guest"));
 
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,12 +87,12 @@ public class UserInfo extends Fragment {
         return view;
     }
 
-    private Bitmap getBitmapFromSharedPreferences(){
+    private Bitmap getBitmapFromSharedPreferences() {
         Bitmap bitmap = null;
-        String imageString=preferences.getString("avator", "null");
-        if(imageString.equals("null"))
+        String imageString = preferences.getString("avator", "null");
+        if (imageString.equals("null")) {
             bitmap = null;
-        else {
+        } else {
             byte[] byteArray = Base64.decode(imageString, Base64.DEFAULT);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
             bitmap = BitmapFactory.decodeStream(byteArrayInputStream);

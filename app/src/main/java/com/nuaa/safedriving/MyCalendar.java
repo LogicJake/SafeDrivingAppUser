@@ -10,6 +10,7 @@ import java.util.Calendar;
 
 public class MyCalendar extends AppCompatActivity {
     private CalendarView calendarView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +29,10 @@ public class MyCalendar extends AppCompatActivity {
             public void onSelectedDayChange(CalendarView calendarView, int i, int i2, int i3) {
                 Intent mIntent = new Intent();
                 mIntent.putExtra("year", i);
-                mIntent.putExtra("month", (i2+1));
+                mIntent.putExtra("month", (i2 + 1));
                 mIntent.putExtra("day", i3);
                 // 设置结果，并进行传送
-                setResult(400,mIntent);
+                setResult(400, mIntent);
                 finish();
             }
         });

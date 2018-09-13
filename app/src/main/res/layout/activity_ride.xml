@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.nuaa.safedriving.Ride">
+    tools:context="com.nuaa.safedriving.Ride"
+    >
 
     <LinearLayout
         android:id="@+id/head"
@@ -13,7 +13,8 @@
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        >
 
         <ImageView
             android:id="@+id/backup"
@@ -21,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/backup" />
+            android:src="@drawable/backup"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -31,43 +33,50 @@
             android:gravity="center"
             android:text="乘车体验"
             android:textColor="#FFFFFF"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="10dp"
             android:text="陀螺仪数据"
-            android:layout_gravity="center"/>
+            />
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/GYROSCOPE"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="10dp"
             android:text="加速度数据"
-            android:layout_gravity="center"/>
+            />
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/ACCELEROMETER"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            />
 
         <Button
             android:id="@+id/finish"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="结束" />
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:text="结束"
+            />
     </LinearLayout>
 </LinearLayout>

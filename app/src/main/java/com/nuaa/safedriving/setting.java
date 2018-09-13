@@ -48,14 +48,14 @@ public class setting extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     super.handleMessage(msg);
-                    int res = (int)msg.obj;
-                    switch (res)
-                    {
+                    int res = (int) msg.obj;
+                    switch (res) {
                         case 200:
-                            saveBitmapToSharedPreferences(picurl+preferences.getInt("id",0)+".jpg");
+                            saveBitmapToSharedPreferences(
+                                picurl + preferences.getInt("id", 0) + ".jpg");
                             pDialog.cancel();
                             break;
                         case 404:
@@ -63,7 +63,7 @@ public class setting extends AppCompatActivity {
                             pDialog.setTitleText("Oops...");
                             pDialog.setContentText("出错了");
                             pDialog.setCancelable(true);
-                             break;
+                            break;
                         case 0:
                             pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                             pDialog.setTitleText("Oops...");
@@ -92,18 +92,15 @@ public class setting extends AppCompatActivity {
                     break;
                 case 1:
                     super.handleMessage(msg);
-                    res = (int)msg.obj;
-                    if (res == 1)
-                    {
+                    res = (int) msg.obj;
+                    if (res == 1) {
                         Toast.makeText(setting.this, "注销成功", Toast.LENGTH_SHORT).show();
                         editor.clear();
                         editor.commit();
                         Intent intent = new Intent(setting.this, Login.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(setting.this, "注销失败", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(setting.this, Login.class);
                         startActivity(intent);
@@ -124,30 +121,33 @@ public class setting extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private Button exit;
     private TextView mail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        backup = (ImageView)findViewById(R.id.backup);
-        avator = (CircleImageView)findViewById(R.id.avator);
-        name = (TextView)findViewById(R.id.name);
-        exit = (Button)findViewById(R.id.exit);
-        mail = (TextView)findViewById(R.id.mail);
+        backup = (ImageView) findViewById(R.id.backup);
+        avator = (CircleImageView) findViewById(R.id.avator);
+        name = (TextView) findViewById(R.id.name);
+        exit = (Button) findViewById(R.id.exit);
+        mail = (TextView) findViewById(R.id.mail);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(setting.this).build();
+        ImageLoaderConfiguration config =
+            new ImageLoaderConfiguration.Builder(setting.this).build();
         ImageLoader.getInstance().init(config);
         displayImageOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .cacheInMemory(true)
-                .cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(300))
-                .imageScaleType(ImageScaleType.EXACTLY).build();
+            .imageScaleType(ImageScaleType.EXACTLY)
+            .cacheInMemory(true)
+            .cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(300))
+            .imageScaleType(ImageScaleType.EXACTLY).build();
 
         Bitmap avator_content = getBitmapFromSharedPreferences();
-        if (avator_content != null)
+        if (avator_content != null) {
             avator.setImageBitmap(avator_content);
-        name.setText(preferences.getString("userName","guest"));
-        mail.setText(preferences.getString("email","未设置"));
+        }
+        name.setText(preferences.getString("userName", "guest"));
+        mail.setText(preferences.getString("email", "未设置"));
 
         backup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,18 +161,18 @@ public class setting extends AppCompatActivity {
             public void onClick(View v) {
                 menuWindow = new SelectPicPopupWindow(setting.this, itemsOnClick);
                 //显示窗口
-                menuWindow.showAtLocation(setting.this.findViewById(R.id.pic), BOTTOM|CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+                menuWindow.showAtLocation(setting.this.findViewById(R.id.pic),
+                    BOTTOM | CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
             }
         });
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable(){
+                new Thread(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        final String token = preferences.getString("token",null);
+                    public void run() {
+                        final String token = preferences.getString("token", null);
                         int result = NewServices.logout(token);
                         Message msg = new Message();
                         msg.what = 1;
@@ -184,36 +184,36 @@ public class setting extends AppCompatActivity {
         });
     }
 
-    private View.OnClickListener itemsOnClick = new View.OnClickListener(){
+    private View.OnClickListener itemsOnClick = new View.OnClickListener() {
 
         public void onClick(View v) {
             menuWindow.dismiss();
             switch (v.getId()) {
                 case R.id.btn_take_photo:
                     PictureSelector.create(setting.this)
-                            .openCamera(PictureMimeType.ofImage())
-                            .selectionMode(PictureConfig.SINGLE)
-                            .freeStyleCropEnabled(true)
-                            .isCamera(true)
-                            .enableCrop(true)// 是否裁剪 true or false
-                            .compress(true)// 是否压缩
-                            .rotateEnabled(true) // 裁剪是否可旋转图片 true or false
-                            .scaleEnabled(true)
-                            .previewImage(true)
-                            .forResult(PictureConfig.CHOOSE_REQUEST);
+                        .openCamera(PictureMimeType.ofImage())
+                        .selectionMode(PictureConfig.SINGLE)
+                        .freeStyleCropEnabled(true)
+                        .isCamera(true)
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩
+                        .rotateEnabled(true) // 裁剪是否可旋转图片 true or false
+                        .scaleEnabled(true)
+                        .previewImage(true)
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                     break;
                 case R.id.btn_pick_photo:
                     PictureSelector.create(setting.this)
-                            .openGallery(PictureMimeType.ofImage())
-                            .selectionMode(PictureConfig.SINGLE)
-                            .freeStyleCropEnabled(true)
-                            .isCamera(true)
-                            .enableCrop(true)// 是否裁剪 true or false
-                            .compress(true)// 是否压缩
-                            .rotateEnabled(true) // 裁剪是否可旋转图片 true or false
-                            .scaleEnabled(true)
-                            .previewImage(true)
-                            .forResult(PictureConfig.CHOOSE_REQUEST);
+                        .openGallery(PictureMimeType.ofImage())
+                        .selectionMode(PictureConfig.SINGLE)
+                        .freeStyleCropEnabled(true)
+                        .isCamera(true)
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩
+                        .rotateEnabled(true) // 裁剪是否可旋转图片 true or false
+                        .scaleEnabled(true)
+                        .previewImage(true)
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                     break;
                 default:
                     break;
@@ -228,33 +228,34 @@ public class setting extends AppCompatActivity {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     media = PictureSelector.obtainMultipleResult(data).get(0);
-                    if (media.isCompressed())
-                        url =media.getCompressPath();
-                    else {
+                    if (media.isCompressed()) {
+                        url = media.getCompressPath();
+                    } else {
                         url = media.getCutPath();
-                        if (media.getCutPath() == null)
+                        if (media.getCutPath() == null) {
                             url = media.getPath();
+                        }
                     }
                     pDialog = new SweetAlertDialog(setting.this, SweetAlertDialog.PROGRESS_TYPE);
                     pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                     pDialog.setTitleText("上传头像中");
                     pDialog.setCancelable(false);
                     pDialog.show();
-                    ImageLoader.getInstance().displayImage("file:/"+url,avator,displayImageOptions);
+                    ImageLoader.getInstance()
+                        .displayImage("file:/" + url, avator, displayImageOptions);
                     uploadPic(url);
                     break;
             }
         }
     }
 
-    public void uploadPic(final String url){
-        new Thread(new Runnable(){
+    public void uploadPic(final String url) {
+        new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-                String token = preferences.getString("token",null);
-                if(token!=null) {
-                    int res = NewServices.postPic(token,new File(url));
+            public void run() {
+                String token = preferences.getString("token", null);
+                if (token != null) {
+                    int res = NewServices.postPic(token, new File(url));
                     Message msg = new Message();
                     msg.obj = res;
                     msg.what = 0;
@@ -265,12 +266,12 @@ public class setting extends AppCompatActivity {
         PictureFileUtils.deleteCacheDirFile(setting.this);
     }
 
-    private Bitmap getBitmapFromSharedPreferences(){
+    private Bitmap getBitmapFromSharedPreferences() {
         Bitmap bitmap = null;
-        String imageString=preferences.getString("avator", "null");
-        if(imageString.equals("null"))
+        String imageString = preferences.getString("avator", "null");
+        if (imageString.equals("null")) {
             bitmap = null;
-        else {
+        } else {
             byte[] byteArray = Base64.decode(imageString, Base64.DEFAULT);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
             bitmap = BitmapFactory.decodeStream(byteArrayInputStream);
@@ -278,17 +279,19 @@ public class setting extends AppCompatActivity {
         return bitmap;
     }
 
-    public void saveBitmapToSharedPreferences(String url){
+    public void saveBitmapToSharedPreferences(String url) {
         DisplayImageOptions options = new DisplayImageOptions.Builder().build();
-        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                String imageString = new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
-                editor.putString("avator", imageString);
-                editor.commit();
-            }
-        });
+        ImageLoader.getInstance()
+            .loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String imageString =
+                        new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+                    editor.putString("avator", imageString);
+                    editor.commit();
+                }
+            });
     }
 }

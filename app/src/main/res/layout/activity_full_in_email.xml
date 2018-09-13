@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:id="@+id/full_in_email"
@@ -10,7 +11,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="22dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        >
 
         <EditText
             android:id="@+id/email"
@@ -18,20 +20,22 @@
             android:layout_height="wrap_content"
             android:hint="请填写邮箱"
             android:inputType="textEmailAddress"
-            android:textSize="14dp"
             android:maxLines="1"
-            android:selectAllOnFocus="true"/>
+            android:selectAllOnFocus="true"
+            android:textSize="14dp"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/l2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/full_in_email"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal"
-        android:layout_below="@+id/full_in_email"
-        android:layout_centerHorizontal="true">
+        >
 
         <EditText
             android:id="@+id/VerificationCode"
@@ -39,40 +43,44 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="请输入您收到的验证码"
-            android:textSize="14dp"
-            android:maxLines="1"
             android:maxLength="4"
-            android:selectAllOnFocus="true"/>
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:textSize="14dp"
+            />
 
         <Button
             android:id="@+id/SendVerificationCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
             android:text="发送验证码"
             android:textSize="14dp"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"/>
+            />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/l2"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="22dp"
         android:orientation="horizontal"
-        android:layout_below="@+id/l2">
+        >
 
         <Button
             android:id="@+id/save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
             android:text="提交"
             android:textSize="14dp"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"/>
+            />
     </LinearLayout>
 </RelativeLayout>

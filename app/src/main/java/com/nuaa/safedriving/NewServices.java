@@ -37,16 +37,17 @@ public class NewServices {
         }
         return md5;
     }
+
     // 二进制转十六进制
     public static String bytesToHex(byte[] bytes) {
         StringBuffer hexStr = new StringBuffer();
         int num;
         for (int i = 0; i < bytes.length; i++) {
             num = bytes[i];
-            if(num < 0) {
+            if (num < 0) {
                 num += 256;
             }
-            if(num < 16){
+            if (num < 16) {
                 hexStr.append("0");
             }
             hexStr.append(Integer.toHexString(num));
@@ -58,7 +59,7 @@ public class NewServices {
         JSONObject jsonObject = null;
         try {
             user_passwd = getMD5(user_passwd);
-            String path = rooturl+"index.php?_action=postLogin";
+            String path = rooturl + "index.php?_action=postLogin";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -66,9 +67,13 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder.encode(user_passwd, "UTF-8");
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            String data =
+                "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder
+                    .encode(user_passwd, "UTF-8");
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
 
@@ -100,11 +105,11 @@ public class NewServices {
         return jsonObject;
     }
 
-    public static Boolean ChangePass(String token,String newpass) {
+    public static Boolean ChangePass(String token, String newpass) {
         Boolean result = false;
         try {
             newpass = getMD5(newpass);
-            String path = rooturl+"index.php?_action=postChangepasswd&token="+token;
+            String path = rooturl + "index.php?_action=postChangepasswd&token=" + token;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -112,9 +117,11 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&new_passwd="+newpass;
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            String data = "&new_passwd=" + newpass;
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
             OutputStream os = urlConnection.getOutputStream();
@@ -150,7 +157,7 @@ public class NewServices {
         try {
             user_password = getMD5(user_password);
             System.out.println(user_password);
-            String path = rooturl+"index.php?_action=postSignup";
+            String path = rooturl + "index.php?_action=postSignup";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -158,9 +165,13 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder.encode(user_password, "UTF-8");
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            String data =
+                "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder
+                    .encode(user_password, "UTF-8");
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
             OutputStream os = urlConnection.getOutputStream();
@@ -184,19 +195,20 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                jsonObject = new JSONObject(baos.toString()).getJSONObject("data").getJSONObject("result");
-            }
-            else
+                jsonObject =
+                    new JSONObject(baos.toString()).getJSONObject("data").getJSONObject("result");
+            } else {
                 return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonObject;
     }
 
-    public static boolean collect(String name,int usr_id,String cdata){
+    public static boolean collect(String name, int usr_id, String cdata) {
         try {
-            String path = rooturl+"index.php?_action=postCollect";
+            String path = rooturl + "index.php?_action=postCollect";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -204,9 +216,12 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&name=" + URLEncoder.encode(name, "UTF-8") + "&id=" + usr_id+"&data="+cdata;
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            String data =
+                "&name=" + URLEncoder.encode(name, "UTF-8") + "&id=" + usr_id + "&data=" + cdata;
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
             OutputStream os = urlConnection.getOutputStream();
@@ -229,14 +244,17 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                int i = new JSONObject(baos.toString()).getJSONObject("data").getJSONObject("result").getInt("status");
-                if(i == 1)
+                int i = new JSONObject(baos.toString()).getJSONObject("data")
+                    .getJSONObject("result")
+                    .getInt("status");
+                if (i == 1) {
                     return true;
-                else
+                } else {
                     return false;
-            }
-            else
+                }
+            } else {
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,7 +264,7 @@ public class NewServices {
     public static JSONObject forgetPassd(String name) {
         JSONObject res = null;
         try {
-            String path = rooturl+"index.php?_action=getForgetpasswd&user_name="+name;
+            String path = rooturl + "index.php?_action=getForgetpasswd&user_name=" + name;
             URL url = new URL(path);
             // 获得连接
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -281,9 +299,13 @@ public class NewServices {
         return res;
     }
 
-    public static int sendCode(String mail,String token){
+    public static int sendCode(String mail, String token) {
         try {
-            String path = rooturl+"index.php?_action=verifyMailbox&action_type=sendCode&token="+token+"&mail="+mail;
+            String path = rooturl
+                + "index.php?_action=verifyMailbox&action_type=sendCode&token="
+                + token
+                + "&mail="
+                + mail;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -310,10 +332,11 @@ public class NewServices {
                 baos.close();
                 System.out.println(baos.toString());
                 String res = new JSONObject(baos.toString()).getString("data");
-                if (res.equals("send success"))
+                if (res.equals("send success")) {
                     return 1;
-                else
+                } else {
                     return 0;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,9 +344,13 @@ public class NewServices {
         return 0;
     }
 
-    public static int verifyCode(String code,String token){
+    public static int verifyCode(String code, String token) {
         try {
-            String path = rooturl+"index.php?_action=verifyMailbox&action_type=verifyCode&token="+token+"&code="+code;
+            String path = rooturl
+                + "index.php?_action=verifyMailbox&action_type=verifyCode&token="
+                + token
+                + "&code="
+                + code;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -350,10 +377,11 @@ public class NewServices {
                 baos.close();
                 System.out.println(baos.toString());
                 String res = new JSONObject(baos.toString()).getString("data");
-                if (res.equals("fail"))
+                if (res.equals("fail")) {
                     return 0;
-                else
+                } else {
                     return 1;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -361,10 +389,10 @@ public class NewServices {
         return 0;
     }
 
-    public static int postPic(String token,File file) {
+    public static int postPic(String token, File file) {
         int result = 0;
         int res = 0;
-        String path = rooturl+"index.php?_action=postAvator&token="+token;
+        String path = rooturl + "index.php?_action=postAvator&token=" + token;
         URL url = null;
         String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
         String PREFIX = "--", LINE_END = "\r\n";
@@ -380,7 +408,8 @@ public class NewServices {
             urlConnection.setRequestMethod("POST"); // 请求方式
             urlConnection.setRequestProperty("Charset", CHARSET); // 设置编码
             urlConnection.setRequestProperty("connection", "keep-alive");
-            urlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="+ BOUNDARY);
+            urlConnection.setRequestProperty("Content-Type",
+                CONTENT_TYPE + ";boundary=" + BOUNDARY);
             if (file != null) {
                 DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream());
                 StringBuffer sb = new StringBuffer();
@@ -388,9 +417,9 @@ public class NewServices {
                 sb.append(BOUNDARY);
                 sb.append(LINE_END);
                 sb.append("Content-Disposition: form-data; name=\"file\"; filename=\""
-                        + file.getName() + "\"" + LINE_END);
+                    + file.getName() + "\"" + LINE_END);
                 sb.append("Content-Type: application/octet-stream; charset="
-                        + CHARSET + LINE_END);
+                    + CHARSET + LINE_END);
                 sb.append(LINE_END);
                 dos.write(sb.toString().getBytes());
                 InputStream is = new FileInputStream(file);
@@ -402,7 +431,7 @@ public class NewServices {
                 is.close();
                 dos.write(LINE_END.getBytes());
                 byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
-                        .getBytes();
+                    .getBytes();
                 dos.write(end_data);
                 dos.flush();
                 /**
@@ -428,11 +457,11 @@ public class NewServices {
         return result;
     }
 
-    public static int logout(String token){
+    public static int logout(String token) {
         int result = 0;
         System.out.println(token);
         try {
-            String path = rooturl+"index.php?_action=postLogout&token="+token;
+            String path = rooturl + "index.php?_action=postLogout&token=" + token;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -466,10 +495,11 @@ public class NewServices {
         return result;
     }
 
-    public static JSONArray getInfo(int type,long date){
+    public static JSONArray getInfo(int type, long date) {
         JSONArray result = null;
         try {
-            String path = rooturl+"index.php?_action=getShuttlelist&destination="+type+"&date="+date;
+            String path =
+                rooturl + "index.php?_action=getShuttlelist&destination=" + type + "&date=" + date;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -503,9 +533,9 @@ public class NewServices {
         return result;
     }
 
-    public static boolean insertComment(String token,float rate,String suggestion,String tag){
+    public static boolean insertComment(String token, float rate, String suggestion, String tag) {
         try {
-            String path = rooturl+"index.php?_action=postComment&token="+token;
+            String path = rooturl + "index.php?_action=postComment&token=" + token;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -513,9 +543,16 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&rate=" + rate+"&suggestion="+URLEncoder.encode(suggestion, "UTF-8")+"&tag="+URLEncoder.encode(tag, "UTF-8");
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            String data = "&rate="
+                + rate
+                + "&suggestion="
+                + URLEncoder.encode(suggestion, "UTF-8")
+                + "&tag="
+                + URLEncoder.encode(tag, "UTF-8");
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
             OutputStream os = urlConnection.getOutputStream();
@@ -539,13 +576,14 @@ public class NewServices {
                 baos.close();
                 System.out.println(baos.toString());
                 int code = new JSONObject(baos.toString()).getInt("code");
-                if(code == 0)
+                if (code == 0) {
                     return true;
-                else
+                } else {
                     return false;
-            }
-            else
+                }
+            } else {
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

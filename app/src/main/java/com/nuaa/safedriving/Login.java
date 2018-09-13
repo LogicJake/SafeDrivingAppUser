@@ -1,4 +1,5 @@
 package com.nuaa.safedriving;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,13 +35,12 @@ import java.io.ByteArrayOutputStream;
 
 import static com.nuaa.safedriving.NewServices.picurl;
 
-
 public class Login extends AppCompatActivity {
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     String name = editName.getText().toString().trim();
                     String password = editPassword.getText().toString().trim();
@@ -52,7 +52,8 @@ public class Login extends AppCompatActivity {
                     JSONObject result = (JSONObject) msg.obj;
                     if (result == null) {
                         pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT)
+                            .show();
                         if (name.equals("admin") && password.equals("admin")) {       //断网下测试使用
                             editor.putString("userName", name);
                             editor.putString("userPassword", password);
@@ -72,19 +73,19 @@ public class Login extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         if (status == 1) {
-                            saveBitmapToSharedPreferences(picurl+id+".jpg");
+                            saveBitmapToSharedPreferences(picurl + id + ".jpg");
                             if (checkBox.isChecked()) {
                                 editor.putString("userName", name);
                                 editor.putString("userPassword", password);
                                 editor.putInt("id", id);
-                                editor.putString("token",token);
-                                editor.putString("email",email);
+                                editor.putString("token", token);
+                                editor.putString("email", email);
                                 editor.commit();
                             } else {        //不自动登陆清除数据
                                 editor.putString("userName", name);
                                 editor.putInt("id", id);
-                                editor.putString("token",token);
-                                editor.putString("email",email);
+                                editor.putString("token", token);
+                                editor.putString("email", email);
                                 editor.remove("userPassword");
                                 editor.commit();
                             }
@@ -93,9 +94,7 @@ public class Login extends AppCompatActivity {
                                 Intent intent = new Intent(Login.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
-                            }
-                            else
-                            {
+                            } else {
                                 Intent intent = new Intent(Login.this, FullInEmail.class);
                                 startActivity(intent);
                                 finish();
@@ -108,7 +107,8 @@ public class Login extends AppCompatActivity {
                             editor.remove("token");
                             editor.commit();
                             pDialog.cancel();
-                            Toast.makeText(Login.this, R.string.password_error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, R.string.password_error, Toast.LENGTH_SHORT)
+                                .show();
                         }
                         if (status == 2) {
                             editor.remove("userName");
@@ -117,7 +117,8 @@ public class Login extends AppCompatActivity {
                             editor.remove("token");
                             editor.commit();
                             pDialog.cancel();
-                            Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, R.string.non_existent_name,
+                                Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
@@ -134,22 +135,21 @@ public class Login extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     System.out.println(status2);
-                    if (status2 == -1){
+                    if (status2 == -1) {
                         pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    }
-                    else if (status2 == 2){
+                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT)
+                            .show();
+                    } else if (status2 == 2) {
                         pDialog.cancel();
                         Toast.makeText(Login.this, "未设置邮箱无法找回密码", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(status2 == 0){
+                    } else if (status2 == 0) {
                         pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                        Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT)
+                            .show();
+                    } else {
                         pDialog.cancel();
-                        editor.putString("token",token2);
-                        editor.putString("email",email2);
+                        editor.putString("token", token2);
+                        editor.putString("email", email2);
                         editor.commit();
                         Intent intent = new Intent(Login.this, CheckCode.class);
                         startActivity(intent);
@@ -158,7 +158,7 @@ public class Login extends AppCompatActivity {
             }
         }
     };
-    private Button bt_login,bt_sign_up;
+    private Button bt_login, bt_sign_up;
     private TextView forget;
     private CheckBox checkBox;
     private EditText editName, editPassword;
@@ -167,16 +167,17 @@ public class Login extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private ImageView eye;
     private Boolean eyeOpen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        bt_login = (Button)findViewById(R.id.login);
-        bt_sign_up = (Button)findViewById(R.id.sign_up);
-        editName = (EditText)findViewById(R.id.editText1);
-        editPassword = (EditText)findViewById(R.id.editText2);
-        checkBox = (CheckBox)findViewById(R.id.cb);
-        eye = (ImageView)findViewById(R.id.eye);
+        bt_login = (Button) findViewById(R.id.login);
+        bt_sign_up = (Button) findViewById(R.id.sign_up);
+        editName = (EditText) findViewById(R.id.editText1);
+        editPassword = (EditText) findViewById(R.id.editText2);
+        checkBox = (CheckBox) findViewById(R.id.cb);
+        eye = (ImageView) findViewById(R.id.eye);
         forget = (TextView) findViewById(R.id.forget_pass);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
@@ -184,9 +185,9 @@ public class Login extends AppCompatActivity {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(Login.this).build();
         ImageLoader.getInstance().init(config);
 
-        String name = preferences.getString("userName",null);
+        String name = preferences.getString("userName", null);
         String password = preferences.getString("userPassword", null);
-        if (name == null||password == null) {
+        if (name == null || password == null) {
             checkBox.setChecked(false);
         } else {
             editName.setText(name);
@@ -194,20 +195,20 @@ public class Login extends AppCompatActivity {
             checkBox.setChecked(true);
         }
 
-
         eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( eyeOpen ){
+                if (eyeOpen) {
                     //密码 TYPE_CLASS_TEXT 和 TYPE_TEXT_VARIATION_PASSWORD 必须一起使用
-                    editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    eye.setImageResource( R.drawable.close_eye );
-                    eyeOpen = false ;
-                }else {
+                    editPassword.setInputType(
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    eye.setImageResource(R.drawable.close_eye);
+                    eyeOpen = false;
+                } else {
                     //明文
-                    editPassword.setInputType( InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD );
-                    eye.setImageResource( R.drawable.open_eye );
-                    eyeOpen = true ;
+                    editPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    eye.setImageResource(R.drawable.open_eye);
+                    eyeOpen = true;
                 }
             }
         });
@@ -220,28 +221,27 @@ public class Login extends AppCompatActivity {
                 try {
                     final String name = editName.getText().toString();
                     final String password = editPassword.getText().toString();
-                    if(name.length() == 0)
-                        Toast.makeText(Login.this, R.string.name_no_empty, Toast.LENGTH_SHORT).show();
-                    else {
-                        if (password.length() == 0)
-                            Toast.makeText(Login.this, R.string.password_no_empty, Toast.LENGTH_SHORT).show();
-                        else {
+                    if (name.length() == 0) {
+                        Toast.makeText(Login.this, R.string.name_no_empty, Toast.LENGTH_SHORT)
+                            .show();
+                    } else {
+                        if (password.length() == 0) {
+                            Toast.makeText(Login.this, R.string.password_no_empty,
+                                Toast.LENGTH_SHORT).show();
+                        } else {
                             pDialog.show();
-                            new Thread(new Runnable(){
+                            new Thread(new Runnable() {
                                 @Override
-                                public void run()
-                                {
+                                public void run() {
                                     JSONObject result = NewServices.login(name, password);
                                     Message msg = new Message();
                                     msg.what = 0;
                                     msg.obj = result;
                                     handler.sendMessage(msg);
-
                                 }
                             }).start();
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -250,7 +250,7 @@ public class Login extends AppCompatActivity {
         bt_sign_up.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this,SignUp.class);
+                Intent intent = new Intent(Login.this, SignUp.class);
                 startActivity(intent);
             }
         });
@@ -271,10 +271,9 @@ public class Login extends AppCompatActivity {
                         pDialog.setCancelable(false);
                         pDialog.show();
                         try {
-                            new Thread(new Runnable(){
+                            new Thread(new Runnable() {
                                 @Override
-                                public void run()
-                                {
+                                public void run() {
                                     String name = et.getText().toString();
                                     JSONObject email = NewServices.forgetPassd(name);
                                     Message msg = new Message();
@@ -295,18 +294,19 @@ public class Login extends AppCompatActivity {
         });
     }
 
-
-    public void saveBitmapToSharedPreferences(String url){
+    public void saveBitmapToSharedPreferences(String url) {
         DisplayImageOptions options = new DisplayImageOptions.Builder().build();
-        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                String imageString = new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
-                editor.putString("avator", imageString);
-                editor.commit();
-            }
-        });
+        ImageLoader.getInstance()
+            .loadImage(url, options, new SimpleImageLoadingListener() {    //加载存到本地
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    loadedImage.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String imageString =
+                        new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+                    editor.putString("avator", imageString);
+                    editor.commit();
+                }
+            });
     }
 }

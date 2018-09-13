@@ -20,10 +20,10 @@ public class SelectPicPopupWindow extends PopupWindow {
     private Button btn_take_photo, btn_pick_photo, btn_cancel;
     private View mMenuView;
 
-    public SelectPicPopupWindow(Activity context,OnClickListener itemsOnClick) {
+    public SelectPicPopupWindow(Activity context, OnClickListener itemsOnClick) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popwindow_pic, null);
         btn_take_photo = (Button) mMenuView.findViewById(R.id.btn_take_photo);
         btn_pick_photo = (Button) mMenuView.findViewById(R.id.btn_pick_photo);
@@ -48,9 +48,9 @@ public class SelectPicPopupWindow extends PopupWindow {
         mMenuView.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 int height = mMenuView.findViewById(R.id.pop_layout).getTop();
-                int y=(int) event.getY();
-                if(event.getAction()==MotionEvent.ACTION_UP){
-                    if(y<height){
+                int y = (int) event.getY();
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (y < height) {
                         dismiss();
                     }
                 }

@@ -1,4 +1,5 @@
 package com.nuaa.safedriving;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -17,18 +18,16 @@ import org.json.JSONObject;
 
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 public class SignUp extends AppCompatActivity {
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             JSONObject result = (JSONObject) msg.obj;
-            if (result == null){
+            if (result == null) {
                 pDialog.cancel();
                 Toast.makeText(SignUp.this, R.string.server_error, Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 int status = 0;
                 try {
                     status = result.getInt("status");
@@ -45,11 +44,12 @@ public class SignUp extends AppCompatActivity {
                     pDialog.cancel();
                     editor.putString("token", token);
                     editor.commit();
-                    Toast.makeText(SignUp.this, R.string.sign_up_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUp.this, R.string.sign_up_success, Toast.LENGTH_SHORT)
+                        .show();
                     Intent intent = new Intent(SignUp.this, FullInEmail.class);
                     startActivity(intent);
                     finish();
-                } else if(status == 2) {
+                } else if (status == 2) {
                     pDialog.cancel();
                     Toast.makeText(SignUp.this, R.string.name_has_exist, Toast.LENGTH_SHORT).show();
                 }
@@ -61,16 +61,17 @@ public class SignUp extends AppCompatActivity {
     private SweetAlertDialog pDialog;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        editName = (EditText)findViewById(R.id.name);
-        editPassword = (EditText)findViewById(R.id.password);
-        editPassword2 = (EditText)findViewById(R.id.password2);
+        editName = (EditText) findViewById(R.id.name);
+        editPassword = (EditText) findViewById(R.id.password);
+        editPassword2 = (EditText) findViewById(R.id.password2);
         preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = preferences.edit();
-        bt_sign_up = (Button)findViewById(R.id.signup);
+        bt_sign_up = (Button) findViewById(R.id.signup);
         bt_sign_up.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pDialog = new SweetAlertDialog(SignUp.this, SweetAlertDialog.PROGRESS_TYPE);
@@ -82,23 +83,21 @@ public class SignUp extends AppCompatActivity {
                     final String name = editName.getText().toString();
                     final String password = editPassword.getText().toString();
                     String password2 = editPassword2.getText().toString();
-                    if(!password.equals(password2)){             //两次密码不一致
+                    if (!password.equals(password2)) {             //两次密码不一致
                         pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                         pDialog.setTitleText(getString(R.string.ERROR));
                         pDialog.setContentText(getString(R.string.pass_no_same));
                         pDialog.setConfirmText(getString(R.string.OK));
                         pDialog.setCancelable(false);
                         pDialog.show();
-                    }
-                    else if (name.length() == 0) {
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText(getString(R.string.ERROR));
-                            pDialog.setContentText(getString(R.string.name_no_empty));
-                            pDialog.setConfirmText(getString(R.string.OK));
-                            pDialog.setCancelable(false);
-                            pDialog.show();
-                        }
-                     else {
+                    } else if (name.length() == 0) {
+                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setTitleText(getString(R.string.ERROR));
+                        pDialog.setContentText(getString(R.string.name_no_empty));
+                        pDialog.setConfirmText(getString(R.string.OK));
+                        pDialog.setCancelable(false);
+                        pDialog.show();
+                    } else {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -113,14 +112,15 @@ public class SignUp extends AppCompatActivity {
                             }
                         }).start();
                     }
-                }catch (Exception e)
-                {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             this.finish();
         }
         return super.onKeyDown(keyCode, event);

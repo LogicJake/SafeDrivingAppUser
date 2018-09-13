@@ -1,96 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listitem"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    >
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_weight="3"
+            >
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center" />
+                android:gravity="center"
+                />
         </LinearLayout>
 
         <View
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_dotted_line"
             android:layout_marginLeft="-40dp"
             android:layout_marginRight="-40dp"
-            android:layerType="software">
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software"
+            >
         </View>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:orientation="vertical">
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    >
                     <ImageView
                         android:layout_width="8dp"
                         android:layout_height="8dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
-                        android:background="@drawable/circle_dark"/>
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/circle_dark"
+                        />
 
                     <TextView
                         android:id="@+id/departure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp" />
+                        android:layout_marginTop="5dp"
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    >
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="13dp"
                         android:background="#90909090"
-                        android:layout_marginLeft="13dp">
+                        >
 
                     </View>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    >
 
                     <ImageView
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/circle" />
+                        android:background="@drawable/circle"
+                        />
 
                     <TextView
                         android:id="@+id/destination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp" />
+                        android:layout_marginTop="5dp"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
@@ -98,25 +113,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
+                    android:layout_marginRight="8dp"
                     android:gravity="center|right"
-                    android:layout_marginRight="8dp">
+                    android:orientation="vertical"
+                    >
 
                     <TextView
                         android:id="@+id/carnum"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
 
                     <TextView
                         android:id="@+id/status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        />
                 </LinearLayout>
             </LinearLayout>
 
@@ -124,8 +143,9 @@
 
     </LinearLayout>
     <View
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#90909090"
-        android:layout_width="match_parent">
+        >
     </View>
 </LinearLayout>

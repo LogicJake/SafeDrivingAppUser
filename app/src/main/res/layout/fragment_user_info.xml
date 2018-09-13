@@ -1,59 +1,68 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/LightGrey">
+    android:background="@color/LightGrey"
+    >
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
         <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            xmlns:android="http://schemas.android.com/apk/res/android">
+            >
             <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:stretchColumns="0,1"
-                android:weightSum="1">
+                android:weightSum="1"
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:background="#F2F2F2"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    >
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar"
                         android:layout_width="100dp"
                         android:layout_height="90dp"
                         android:layout_centerInParent="true"
-                        android:src="@android:drawable/sym_def_app_icon"
-                        android:layout_marginTop="20dp"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@android:drawable/sym_def_app_icon"
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="90dp"
                         android:layout_marginTop="20dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        >
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                            android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            >
 
                             <TextView
                                 android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
                                 android:layout_marginLeft="5dp"
-                                android:gravity="center" />
+                                android:gravity="center"
+                                />
                         </LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="南京航空航天大学 " />
+                            android:text="南京航空航天大学 "
+                            />
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -61,99 +70,116 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="#ffffff"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    >
                     <ImageView
-                        android:layout_marginLeft="10dp"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/sell"/>
-                    <TextView
                         android:layout_marginLeft="10dp"
+                        android:src="@drawable/sell"
+                        />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:text="我的评价"
                         android:textSize="15dp"
-                        android:gravity="center"/>
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="right"
-                        android:layout_gravity="center">
+                        >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginRight="10dp"
                             android:text="＞"
-                            android:textSize="20dp"/>
+                            android:textSize="20dp"
+                            />
                     </LinearLayout>
                 </LinearLayout>
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="0.3dp"
-                    android:background="@color/Gainsboro"/>
+                    android:background="@color/Gainsboro"
+                    />
                 <LinearLayout
                     android:id="@+id/collection"
                     android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:background="#ffffff"
-                    android:layout_height="50dp">
+                    >
                     <ImageView
-                        android:layout_marginLeft="10dp"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/buy"/>
-                    <TextView
                         android:layout_marginLeft="10dp"
+                        android:src="@drawable/buy"
+                        />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:text="众包任务"
                         android:textSize="15dp"
-                        android:gravity="center"/>
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="right"
-                        android:layout_gravity="center">
+                        >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginRight="10dp"
                             android:text="＞"
-                            android:textSize="20dp"/>
+                            android:textSize="20dp"
+                            />
                     </LinearLayout>
                 </LinearLayout>
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="10dp"
-                    android:background="@color/LightGrey"/>
+                    android:background="@color/LightGrey"
+                    />
                 <LinearLayout
                     android:id="@+id/setting"
                     android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:background="#ffffff"
                     android:clickable="true"
-                    android:layout_height="50dp">
+                    >
                     <ImageView
-                        android:layout_marginLeft="10dp"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/setting"/>
-                    <TextView
                         android:layout_marginLeft="10dp"
+                        android:src="@drawable/setting"
+                        />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:text="设置"
                         android:textSize="15dp"
-                        android:gravity="center"/>
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="right"
-                        android:layout_gravity="center">
+                        >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginRight="10dp"
                             android:text="＞"
-                            android:textSize="20dp"/>
+                            android:textSize="20dp"
+                            />
                     </LinearLayout>
                 </LinearLayout>
             </TableLayout>

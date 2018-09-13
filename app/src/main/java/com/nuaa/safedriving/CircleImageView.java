@@ -16,28 +16,29 @@ import android.widget.ImageView;
 
 /**
  * 自定义的圆角矩形ImageView，可以直接当组件在布局中使用。
- * @author se7en
  *
+ * @author se7en
  */
-public class CircleImageView extends ImageView{
+public class CircleImageView extends ImageView {
 
     private Paint paint;
 
     public CircleImageView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public CircleImageView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        paint  = new Paint();
+        paint = new Paint();
     }
 
     /**
      * 绘制圆角矩形图片
+     *
      * @author se7en
      */
     @Override
@@ -46,12 +47,11 @@ public class CircleImageView extends ImageView{
         Drawable drawable = getDrawable();
         if (null != drawable) {
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            Bitmap b = getRoundBitmap(bitmap, 30 );
+            Bitmap b = getRoundBitmap(bitmap, 30);
             final Rect rectSrc = new Rect(0, 0, b.getWidth(), b.getHeight());
-            final Rect rectDest = new Rect(0,0,getWidth(),getHeight());
+            final Rect rectDest = new Rect(0, 0, getWidth(), getHeight());
             paint.reset();
             canvas.drawBitmap(b, rectSrc, rectDest, paint);
-
         } else {
             super.onDraw(canvas);
         }
@@ -59,13 +59,13 @@ public class CircleImageView extends ImageView{
 
     /**
      * 获取圆角矩形图片方法
-     * @param bitmap
+     *
      * @param roundPx 这个属性是设置弧度，一般设置为14，也可以结合实际效果。本例中是30，为了实现明显一点。
      * @return se7en
      */
     private Bitmap getRoundBitmap(Bitmap bitmap, int roundPx) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Config.ARGB_8888);
+            bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
