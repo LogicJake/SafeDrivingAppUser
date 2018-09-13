@@ -80,22 +80,22 @@ public class setting extends AppCompatActivity {
                         pDialog.setCancelable(true);
                     }
                 case 1:
-                    //super.handleMessage(msg);
-                    //res = (int) msg.obj;
-                    //if (res == 1) {
-                    //    Toast.makeText(setting.this, "注销成功", Toast.LENGTH_SHORT).show();
-                    //    editor.clear();
-                    //    editor.commit();
-                    //    Intent intent = new Intent(setting.this, Login.class);
-                    //    startActivity(intent);
-                    //    finish();
-                    //} else {
-                    //    Toast.makeText(setting.this, "注销失败", Toast.LENGTH_SHORT).show();
-                    //    Intent intent = new Intent(setting.this, Login.class);
-                    //    startActivity(intent);
-                    //    finish();
-                    //}
-                    //break;
+                    super.handleMessage(msg);
+                    flag = (int) msg.obj;
+                    if (flag == HResult.S_OK.getIndex()) {
+                        Toast.makeText(setting.this, "注销成功", Toast.LENGTH_SHORT).show();
+                        editor.clear();
+                        editor.commit();
+                        Intent intent = new Intent(setting.this, Login.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(setting.this, "注销失败", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(setting.this, Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    break;
             }
         }
     };

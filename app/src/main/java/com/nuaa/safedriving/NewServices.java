@@ -430,11 +430,12 @@ public class NewServices {
         int result = 0;
         System.out.println(token);
         try {
-            String path = rooturl + "index.php?_action=postLogout&token=" + token;
+            String path = rooturl + "account/logout";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
@@ -456,7 +457,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                result = new JSONObject(baos.toString()).getInt("data");
+                result = new JSONObject(baos.toString()).getInt("hr");
             }
         } catch (Exception e) {
             e.printStackTrace();
