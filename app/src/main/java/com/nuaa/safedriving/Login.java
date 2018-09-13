@@ -11,7 +11,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,21 +18,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+import java.io.ByteArrayOutputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-
-import static com.nuaa.safedriving.NewServices.picurl;
+import static com.nuaa.safedriving.NewServices.rooturl;
 
 public class Login extends AppCompatActivity {
     private Handler handler = new Handler() {
@@ -48,6 +43,7 @@ public class Login extends AppCompatActivity {
                     int id = -1;
                     String email = null;
                     String token = null;
+                    String avatarUrl = null;
                     super.handleMessage(msg);
                     JSONObject result = (JSONObject) msg.obj;
                     if (result == null) {
@@ -65,15 +61,16 @@ public class Login extends AppCompatActivity {
                         }
                     } else {
                         try {
-                            status = result.getInt("status");
-                            id = result.getInt("id");
-                            token = result.getString("token");
-                            email = result.getString("email");
+                            status = result.getInt("hr");
+                            id = result.getJSONObject("data").getInt("uid");
+                            token = result.getJSONObject("data").getString("token");
+                            email = result.getJSONObject("data").getString("email");
+                            avatarUrl = result.getJSONObject("data").getString("avatarUrl");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (status == 1) {
-                            saveBitmapToSharedPreferences(picurl + id + ".jpg");
+                        if (status == HResult.S_OK.getIndex()) {
+                            saveBitmapToSharedPreferences(rooturl + avatarUrl);
                             if (checkBox.isChecked()) {
                                 editor.putString("userName", name);
                                 editor.putString("userPassword", password);
@@ -100,7 +97,7 @@ public class Login extends AppCompatActivity {
                                 finish();
                             }
                         }
-                        if (status == 0) {
+                        if (status == HResult.E_INCORRECT_PASSWORD.getIndex()) {
                             editor.remove("userName");
                             editor.remove("userPassword");
                             editor.remove("id");
@@ -110,7 +107,7 @@ public class Login extends AppCompatActivity {
                             Toast.makeText(Login.this, R.string.password_error, Toast.LENGTH_SHORT)
                                 .show();
                         }
-                        if (status == 2) {
+                        if (status == HResult.E_NO_USERNAME.getIndex()) {
                             editor.remove("userName");
                             editor.remove("userPassword");
                             editor.remove("id");

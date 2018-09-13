@@ -1,8 +1,5 @@
 package com.nuaa.safedriving;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -12,8 +9,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.UUID;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import static android.provider.Telephony.Mms.Part.CHARSET;
 
@@ -22,44 +20,13 @@ import static android.provider.Telephony.Mms.Part.CHARSET;
  */
 
 public class NewServices {
-    public static String rooturl = "http://api.logicjake.xyz/driving/";
-    public static String picurl = "http://api.logicjake.xyz/driving-file/avator/";
-
-    public static String getMD5(String message) {
-        String md5 = "";
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");  // 创建一个md5算法对象
-            byte[] messageByte = message.getBytes("UTF-8");
-            byte[] md5Byte = md.digest(messageByte);              // 获得MD5字节数组,16*8=128位
-            md5 = bytesToHex(md5Byte);                            // 转换为16进制字符串
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return md5;
-    }
-
-    // 二进制转十六进制
-    public static String bytesToHex(byte[] bytes) {
-        StringBuffer hexStr = new StringBuffer();
-        int num;
-        for (int i = 0; i < bytes.length; i++) {
-            num = bytes[i];
-            if (num < 0) {
-                num += 256;
-            }
-            if (num < 16) {
-                hexStr.append("0");
-            }
-            hexStr.append(Integer.toHexString(num));
-        }
-        return hexStr.toString().toUpperCase();
-    }
+    //public static String rooturl = "http://api.logicjake.xyz/driving/";
+    public static String rooturl = "http://app.logicjake.xyz:8080/driving/";
 
     public static JSONObject login(String user_name, String user_passwd) {          //登陆请求
         JSONObject jsonObject = null;
         try {
-            user_passwd = getMD5(user_passwd);
-            String path = rooturl + "index.php?_action=postLogin";
+            String path = rooturl + "account/login";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -68,7 +35,7 @@ public class NewServices {
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
             String data =
-                "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder
+                "&userName=" + URLEncoder.encode(user_name, "UTF-8") + "&password=" + URLEncoder
                     .encode(user_passwd, "UTF-8");
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
@@ -97,7 +64,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                jsonObject = new JSONObject(baos.toString()).getJSONObject("data");
+                jsonObject = new JSONObject(baos.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +75,6 @@ public class NewServices {
     public static Boolean ChangePass(String token, String newpass) {
         Boolean result = false;
         try {
-            newpass = getMD5(newpass);
             String path = rooturl + "index.php?_action=postChangepasswd&token=" + token;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -155,7 +121,6 @@ public class NewServices {
     public static JSONObject signup(String user_name, String user_password) {
         JSONObject jsonObject = null;
         try {
-            user_password = getMD5(user_password);
             System.out.println(user_password);
             String path = rooturl + "index.php?_action=postSignup";
             URL url = new URL(path);

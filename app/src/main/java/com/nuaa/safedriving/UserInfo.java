@@ -26,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.nuaa.safedriving.NewServices.picurl;
 
 public class UserInfo extends Fragment {
 

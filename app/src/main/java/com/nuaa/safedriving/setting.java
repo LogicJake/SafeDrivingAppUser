@@ -42,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
-import static com.nuaa.safedriving.NewServices.picurl;
+import static com.nuaa.safedriving.NewServices.rooturl;
 
 public class setting extends AppCompatActivity {
     private Handler handler = new Handler() {
@@ -55,7 +55,7 @@ public class setting extends AppCompatActivity {
                     switch (res) {
                         case 200:
                             saveBitmapToSharedPreferences(
-                                picurl + preferences.getInt("id", 0) + ".jpg");
+                                rooturl + preferences.getInt("id", 0) + ".jpg");
                             pDialog.cancel();
                             break;
                         case 404:
