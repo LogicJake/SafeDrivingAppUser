@@ -12,12 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.nuaa.safedriving.model.HResult;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SignUp extends AppCompatActivity {
     private Handler handler = new Handler() {
@@ -38,7 +36,7 @@ public class SignUp extends AppCompatActivity {
                 if (status == HResult.S_OK.getIndex()) {
                     String token = null;
                     try {
-                        token = result.getString("token");
+                        token = result.getJSONObject("data").getString("token");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

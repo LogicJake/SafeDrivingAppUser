@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.nuaa.safedriving.model.HResult;
 import org.json.JSONObject;
 
 public class FullInEmail extends AppCompatActivity {
@@ -28,7 +29,7 @@ public class FullInEmail extends AppCompatActivity {
             switch (msg.what) {
                 case 0:
                     int status = (int) msg.obj;
-                    if (status == 1) {
+                    if (status == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(FullInEmail.this, "发送成功", Toast.LENGTH_SHORT);
                         CountDownTimer timer = new CountDownTimer(10 * 1000, 1000) {
@@ -51,7 +52,7 @@ public class FullInEmail extends AppCompatActivity {
                     break;
                 case 1:
                     status = (int) msg.obj;
-                    if (status == 1) {
+                    if (status == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(FullInEmail.this, "验证成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(FullInEmail.this, Login.class);

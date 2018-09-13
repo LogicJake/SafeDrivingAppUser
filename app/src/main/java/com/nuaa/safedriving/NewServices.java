@@ -1,5 +1,6 @@
 package com.nuaa.safedriving;
 
+import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -23,6 +24,7 @@ public class NewServices {
     //public static String rooturl = "http://api.logicjake.xyz/driving/";
     public static String rooturl = "http://app.logicjake.xyz:8080/driving/";
     public static final String AUTHORIZATION_HEADER = "Authorization-Driving";
+    private static final String TAG = "NewServices";
 
     public static JSONObject login(String user_name, String user_passwd) {          //登陆请求
         JSONObject jsonObject = null;
@@ -268,19 +270,25 @@ public class NewServices {
 
     public static int sendCode(String mail, String token) {
         try {
-            String path = rooturl
-                + "index.php?_action=verifyMailbox&action_type=sendCode&token="
-                + token
-                + "&mail="
-                + mail;
+            String path = rooturl + "verifyCode/sendCode";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            urlConnection.connect();
+            String data = "toMail=" + mail;
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
+            urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
+            urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
+            OutputStream os = urlConnection.getOutputStream();
+            os.write(data.getBytes());
+            os.flush();
             if (urlConnection.getResponseCode() == 200) {
                 // 获取响应的输入流对象
                 InputStream is = urlConnection.getInputStream();
@@ -298,12 +306,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                String res = new JSONObject(baos.toString()).getString("data");
-                if (res.equals("send success")) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                return new JSONObject(baos.toString()).getInt("hr");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,19 +316,25 @@ public class NewServices {
 
     public static int verifyCode(String code, String token) {
         try {
-            String path = rooturl
-                + "index.php?_action=verifyMailbox&action_type=verifyCode&token="
-                + token
-                + "&code="
-                + code;
+            String path = rooturl + "verifyCode/verifyCode";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            urlConnection.connect();
+            String data = "&code=" + URLEncoder.encode(code, "UTF-8");
+            urlConnection.setRequestProperty("Content-Length",
+                String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
+            urlConnection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=utf-8");
+            urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
+            urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
+            OutputStream os = urlConnection.getOutputStream();
+            os.write(data.getBytes());
+            os.flush();
             if (urlConnection.getResponseCode() == 200) {
                 // 获取响应的输入流对象
                 InputStream is = urlConnection.getInputStream();
@@ -343,12 +352,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                String res = new JSONObject(baos.toString()).getString("data");
-                if (res.equals("fail")) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+                return new JSONObject(baos.toString()).getInt("hr");
             }
         } catch (Exception e) {
             e.printStackTrace();
