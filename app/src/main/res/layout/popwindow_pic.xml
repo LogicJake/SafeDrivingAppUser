@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:gravity="center"
-            android:text="修改头像（大小不要超过1M）"
+            android:text="修改头像（大小不要超过2M）"
             android:textColor="#8a8a8a"
             android:textSize="15sp"
             />

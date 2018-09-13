@@ -1,6 +1,5 @@
 package com.nuaa.safedriving;
 
-import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -360,10 +359,10 @@ public class NewServices {
         return 0;
     }
 
-    public static int postPic(String token, File file) {
-        int result = 0;
+    public static JSONObject postPic(String token, File file) {
+        JSONObject result = null;
         int res = 0;
-        String path = rooturl + "index.php?_action=postAvator&token=" + token;
+        String path = rooturl + "account/uploadAvatar";
         URL url = null;
         String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
         String PREFIX = "--", LINE_END = "\r\n";
@@ -377,6 +376,7 @@ public class NewServices {
             urlConnection.setDoInput(true); // 允许输入流
             urlConnection.setDoOutput(true); // 允许输出流
             urlConnection.setRequestMethod("POST"); // 请求方式
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
             urlConnection.setRequestProperty("Charset", CHARSET); // 设置编码
             urlConnection.setRequestProperty("connection", "keep-alive");
             urlConnection.setRequestProperty("Content-Type",
@@ -417,9 +417,7 @@ public class NewServices {
                         sb1.append((char) ss);
                     }
                     System.out.println(sb1.toString());
-                    result = new JSONObject(sb1.toString()).getJSONObject("data").getInt("status");
-                } else {
-                    result = 0;
+                    result = new JSONObject(sb1.toString());
                 }
             }
         } catch (Exception e) {
