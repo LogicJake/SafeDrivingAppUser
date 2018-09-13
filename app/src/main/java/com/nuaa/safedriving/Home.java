@@ -69,9 +69,9 @@ public class Home extends Fragment {
                 Intent intent = new Intent(view.getContext(), ShuttleInfo.class);
                 String origin_content = origin.getText().toString().trim();
                 if (origin_content.equals("将军路校区")) {
-                    intent.putExtra("type", 1);
+                    intent.putExtra("type", 0);
                 } else {
-                    intent.putExtra("type", 2);
+                    intent.putExtra("type", 1);
                 }
                 intent.putExtra("date", time.getText().toString().trim());
                 startActivity(intent);

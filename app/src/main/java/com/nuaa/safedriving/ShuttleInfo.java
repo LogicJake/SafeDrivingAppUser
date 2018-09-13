@@ -1,12 +1,13 @@
 package com.nuaa.safedriving;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +18,19 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ShuttleInfo extends AppCompatActivity {
     private ImageView up;
+    private SharedPreferences preferences;
     private ScrollView scrollView;
     private TextView noInfo;
     private List<HashMap<String, Object>> mListData = new ArrayList<HashMap<String, Object>>();
@@ -91,13 +91,15 @@ public class ShuttleInfo extends AppCompatActivity {
         noInfo = (TextView) findViewById(R.id.noInfo);
         lv = (ListView) findViewById(R.id.shuttlelist);
         mswipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sv);
+        preferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
 
         Intent intent = getIntent();
-        type = intent.getIntExtra("type", 1);
+        type = intent.getIntExtra("type", 0);
         date = intent.getStringExtra("date");
 
         getInfo(type, date);         //获取班车信息
@@ -142,32 +144,33 @@ public class ShuttleInfo extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
         try {
             final Date date_d = format.parse(date);
-            final long time = date_d.getTime() / 1000;
+            final long time = date_d.getTime();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONArray res = NewServices.getInfo(type, time);
+                    final String token = preferences.getString("token", null);
+                    JSONArray res = NewServices.getInfo(type, time, token);
                     if (res != null) {
                         for (int i = 0; i < res.length(); i++) {
                             try {
                                 JSONObject temp = (JSONObject) res.get(i);
                                 HashMap map = new HashMap<String, Object>();
                                 map.put("time", temp.getString("time"));
-                                map.put("car_num", temp.getString("car_num") + "辆");
-                                if (type == 1) {       //将军路出发
+                                map.put("car_num", temp.getString("carNum") + "辆");
+                                if (type == 0) {       //将军路出发
                                     map.put("destination", "明故宫校区");
-                                    if (temp.getString("east").equals("1")) {
+                                    if (temp.getBoolean("east")) {
                                         map.put("departure", "将军路校区东区");
-                                    } else if (temp.getString("lancui").equals("1")) {
+                                    } else if (temp.getBoolean("lancui")) {
                                         map.put("departure", "揽翠苑");
                                     } else {
                                         map.put("departure", "将军路校区西区");
                                     }
                                 } else {
                                     map.put("departure", "明故宫校区");
-                                    if (temp.getString("east").equals("1")) {
+                                    if (temp.getBoolean("east")) {
                                         map.put("destination", "将军路校区东区");
-                                    } else if (temp.getString("lancui").equals("1")) {
+                                    } else if (temp.getBoolean("lancui")) {
                                         map.put("destination", "揽翠苑");
                                     } else {
                                         map.put("destination", "将军路校区西区");

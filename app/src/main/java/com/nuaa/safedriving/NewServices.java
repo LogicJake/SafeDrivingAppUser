@@ -464,15 +464,16 @@ public class NewServices {
         return result;
     }
 
-    public static JSONArray getInfo(int type, long date) {
+    public static JSONArray getInfo(int type, long date, String token) {
         JSONArray result = null;
         try {
             String path =
-                rooturl + "index.php?_action=getShuttlelist&destination=" + type + "&date=" + date;
+                rooturl + "ride/getBusInfo?destination=" + type + "&date=" + date;
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
