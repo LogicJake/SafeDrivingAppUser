@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.nuaa.safedriving.model.HResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,11 +31,11 @@ public class SignUp extends AppCompatActivity {
             } else {
                 int status = 0;
                 try {
-                    status = result.getInt("status");
+                    status = result.getInt("hr");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (status == 1) {
+                if (status == HResult.S_OK.getIndex()) {
                     String token = null;
                     try {
                         token = result.getString("token");
@@ -49,7 +50,7 @@ public class SignUp extends AppCompatActivity {
                     Intent intent = new Intent(SignUp.this, FullInEmail.class);
                     startActivity(intent);
                     finish();
-                } else if (status == 2) {
+                } else if (status == HResult.E_DUPLICATED_USERNAME.getIndex()) {
                     pDialog.cancel();
                     Toast.makeText(SignUp.this, R.string.name_has_exist, Toast.LENGTH_SHORT).show();
                 }

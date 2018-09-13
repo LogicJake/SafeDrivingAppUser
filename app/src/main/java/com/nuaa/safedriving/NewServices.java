@@ -124,7 +124,7 @@ public class NewServices {
         JSONObject jsonObject = null;
         try {
             System.out.println(user_password);
-            String path = rooturl + "index.php?_action=postSignup";
+            String path = rooturl + "account/signUp";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -133,7 +133,7 @@ public class NewServices {
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
             String data =
-                "&user_name=" + URLEncoder.encode(user_name, "UTF-8") + "&user_passwd=" + URLEncoder
+                "&userName=" + URLEncoder.encode(user_name, "UTF-8") + "&password=" + URLEncoder
                     .encode(user_password, "UTF-8");
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
@@ -163,7 +163,7 @@ public class NewServices {
                 baos.close();
                 System.out.println(baos.toString());
                 jsonObject =
-                    new JSONObject(baos.toString()).getJSONObject("data").getJSONObject("result");
+                    new JSONObject(baos.toString());
             } else {
                 return null;
             }

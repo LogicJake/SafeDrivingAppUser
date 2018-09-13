@@ -164,7 +164,7 @@ public class CheckCode extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                Boolean res = NewServices.ChangePass(token, str1);
+                                int res = NewServices.ChangePass(token, str1);
                                 Message msg = new Message();
                                 msg.obj = res;
                                 msg.what = 2;
