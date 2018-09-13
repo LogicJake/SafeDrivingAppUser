@@ -22,6 +22,7 @@ import static android.provider.Telephony.Mms.Part.CHARSET;
 public class NewServices {
     //public static String rooturl = "http://api.logicjake.xyz/driving/";
     public static String rooturl = "http://app.logicjake.xyz:8080/driving/";
+    public static final String AUTHORIZATION_HEADER = "Authorization-Driving";
 
     public static JSONObject login(String user_name, String user_passwd) {          //登陆请求
         JSONObject jsonObject = null;
@@ -72,10 +73,10 @@ public class NewServices {
         return jsonObject;
     }
 
-    public static Boolean ChangePass(String token, String newpass) {
-        Boolean result = false;
+    public static int ChangePass(String token, String newpass) {
+        int result = 0;
         try {
-            String path = rooturl + "index.php?_action=postChangepasswd&token=" + token;
+            String path = rooturl + "account/modifyPassword";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -86,6 +87,7 @@ public class NewServices {
             String data = "&new_passwd=" + newpass;
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
             urlConnection.setRequestProperty("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
@@ -110,7 +112,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                result = new JSONObject(baos.toString()).getJSONObject("data").getBoolean("result");
+                result = new JSONObject(baos.toString()).getInt("hr");
             }
         } catch (Exception e) {
             e.printStackTrace();
