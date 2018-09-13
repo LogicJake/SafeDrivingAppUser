@@ -20,7 +20,6 @@ import static android.provider.Telephony.Mms.Part.CHARSET;
  */
 
 public class NewServices {
-    //public static String rooturl = "http://api.logicjake.xyz/driving/";
     public static String rooturl = "http://app.logicjake.xyz:8080/driving/";
     public static final String AUTHORIZATION_HEADER = "Authorization-Driving";
     private static final String TAG = "NewServices";
