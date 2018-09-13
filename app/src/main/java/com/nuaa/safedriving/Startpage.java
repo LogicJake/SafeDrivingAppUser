@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.nuaa.safedriving.model.HResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,15 +20,14 @@ public class Startpage extends AppCompatActivity {
                 int status = -1;
                 String token = null;
                 String email = null;
-                int id = 0;
                 try {
-                    status = result.getInt("status");
-                    token = result.getString("token");
-                    email = result.getString("email");
+                    status = result.getInt("hr");
+                    token = result.getJSONObject("data").getString("token");
+                    email = result.getJSONObject("data").getString("email");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (status == 1) {      //登陆成功，获取最新的token
+                if (status == HResult.S_OK.getIndex()) {      //登陆成功，获取最新的token
                     editor.putString("token", token);
                     editor.putString("email", email);
                     editor.commit();
