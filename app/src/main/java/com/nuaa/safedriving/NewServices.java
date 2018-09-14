@@ -1,5 +1,6 @@
 package com.nuaa.safedriving;
 
+import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -558,5 +559,44 @@ public class NewServices {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static JSONObject startRide(String region, String token) {
+        JSONObject result = null;
+        try {
+            String path =
+                rooturl + "ride/startRide?region=" + region;
+            URL url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            // 设置请求的方式
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
+            // 设置请求的超时时间
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.connect();
+            if (urlConnection.getResponseCode() == 200) {
+                // 获取响应的输入流对象
+                InputStream is = urlConnection.getInputStream();
+                // 创建字节输出流对象
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // 定义读取的长度
+                int len = 0;
+                // 定义缓冲区
+                byte buffer[] = new byte[1024];
+                // 按照缓冲区的大小，循环读取
+                while ((len = is.read(buffer)) != -1) {
+                    // 根据读取的长度写入到os对象中
+                    baos.write(buffer, 0, len);
+                }
+                is.close();
+                baos.close();
+                Log.d(TAG, "startRide: "+baos.toString());
+                result = new JSONObject(baos.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

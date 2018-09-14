@@ -1,5 +1,7 @@
 package com.nuaa.safedriving;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,12 +10,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,22 +26,20 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.github.mikephil.charting.charts.LineChart;
+import com.nuaa.safedriving.model.HResult;
 import com.nuaa.safedriving.util.DynamicLineChartManager;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
 
 public class Ride extends AppCompatActivity implements View.OnClickListener {
+    private Context context;
     private int type;
     private String date;
     private String time;
@@ -54,6 +54,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     Boolean isHave1 = false;
     Boolean isHave2 = false;
     Button finsh;
+    int rideId;
     private FinishPopupWindow menuWindow;
     private SharedPreferences preferences;
 
@@ -93,6 +94,31 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                         menuWindow.setSoftInputMode(
                             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     }
+                case 2:
+                    JSONObject res = (JSONObject) msg.obj;
+                    if (res == null)
+                    {
+                        Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                        chooseSeat();
+                    }
+                    else {
+                        try {
+                            int hr = res.getInt("hr");
+                            if (hr == HResult.S_OK.getIndex()) {
+                                rideId = res.getInt("data");
+                                StartRecord();          //一切正常采集数据
+                                init();
+                            } else {
+                                Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                                chooseSeat();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            chooseSeat();
+                            Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
             }
         }
     };
@@ -173,6 +199,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride);
+        context = this;
         backup = (ImageView) findViewById(R.id.backup);
         finsh = (Button) findViewById(R.id.finish);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);        //传感器
@@ -267,8 +294,18 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(Ride.this, "没有选择区域，请重新提交！", Toast.LENGTH_SHORT).show();
                     chooseSeat();
                 } else {
-                    StartRecord();          //一切正常采集数据
-                    init();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final String token = preferences.getString("token", null);
+                            JSONObject result = NewServices.startRide(Region, token);
+                            Message msg = new Message();
+                            msg.what = 2;
+                            msg.obj = result;
+                            handler.sendMessage(msg);
+                        }
+                    }).start();
+
                 }
             }
         });
