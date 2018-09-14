@@ -174,9 +174,9 @@ public class NewServices {
         return jsonObject;
     }
 
-    public static boolean collect(String name, int usr_id, String cdata) {
+    public static int collect(int rideId, int type, String token, String cdata) {
         try {
-            String path = rooturl + "index.php?_action=postCollect";
+            String path = rooturl + "ride/addData";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -185,11 +185,13 @@ public class NewServices {
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
             String data =
-                "&name=" + URLEncoder.encode(name, "UTF-8") + "&id=" + usr_id + "&data=" + cdata;
+                "&rideId=" + rideId + "&type=" + type + "&data=" + cdata;
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
             urlConnection.setRequestProperty("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
+
             urlConnection.setDoOutput(true); // 发送POST请求必须设置允许输出
             urlConnection.setDoInput(true); // 发送POST请求必须设置允许输入
             OutputStream os = urlConnection.getOutputStream();
@@ -211,22 +213,15 @@ public class NewServices {
                 }
                 is.close();
                 baos.close();
-                System.out.println(baos.toString());
-                int i = new JSONObject(baos.toString()).getJSONObject("data")
-                    .getJSONObject("result")
-                    .getInt("status");
-                if (i == 1) {
-                    return true;
-                } else {
-                    return false;
-                }
+                int res = new JSONObject(baos.toString()).getInt("hr");
+                return  res;
             } else {
-                return false;
+                return -1;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
-        return true;
     }
 
     public static JSONObject forgetPassd(String name) {
@@ -591,7 +586,7 @@ public class NewServices {
                 }
                 is.close();
                 baos.close();
-                Log.d(TAG, "startRide: "+baos.toString());
+                Log.d(TAG, "startRide: " + baos.toString());
                 result = new JSONObject(baos.toString());
             }
         } catch (Exception e) {

@@ -1,6 +1,5 @@
 package com.nuaa.safedriving;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,8 +65,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     private List<String> names = new ArrayList<>(); //折线名字集合
     private List<Integer> colour = new ArrayList<>();//折线颜色集合
 
-    private int count1 = 10;
-    private int count2 = 10;
+    private int count1 = 50;
+    private int count2 = 50;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -96,12 +96,10 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     }
                 case 2:
                     JSONObject res = (JSONObject) msg.obj;
-                    if (res == null)
-                    {
+                    if (res == null) {
                         Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
                         chooseSeat();
-                    }
-                    else {
+                    } else {
                         try {
                             int hr = res.getInt("hr");
                             if (hr == HResult.S_OK.getIndex()) {
@@ -134,23 +132,35 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time", "" + timeStamp);
-                tmp.put("x", "" + x);
-                tmp.put("y", "" + y);
-                tmp.put("z", "" + z);
-                if (count1 == 10) {
+                if (count1 == 50) {
                     list1.add(x);
                     list1.add(y);
                     list1.add(z);
                     dynamicLineChartManager1.addEntry(list1);
                     list1.clear();
                     count1 = 0;
+
+                    tmp.put("time", "" + timeStamp);
+                    tmp.put("x", "" + x);
+                    tmp.put("y", "" + y);
+                    tmp.put("z", "" + z);
+                    data.put(tmp);
+                    if (data.length() == 10) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String token = preferences.getString("token", null);
+                                NewServices.collect(rideId, 1, token, data.toString());
+                                Log.d("data length", "run: " + data.length());
+                                data = new JSONArray();
+                            }
+                        }).start();
+                    }
                 }
                 count1++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            data.put(tmp);
         }
 
         @Override
@@ -170,23 +180,34 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time", "" + timeStamp);
-                tmp.put("x", "" + x);
-                tmp.put("y", "" + y);
-                tmp.put("z", "" + z);
-                if (count2 == 10) {
+                if (count2 == 50) {
                     list2.add(x);
                     list2.add(y);
                     list2.add(z);
                     dynamicLineChartManager2.addEntry(list2);
                     list2.clear();
                     count2 = 0;
+                    tmp.put("time", "" + timeStamp);
+                    tmp.put("x", "" + x);
+                    tmp.put("y", "" + y);
+                    tmp.put("z", "" + z);
+                    data2.put(tmp);
+                    if (data2.length() == 10) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String token = preferences.getString("token", null);
+                                NewServices.collect(rideId, 0, token, data2.toString());
+                                Log.d("data2 length", "run: " + data2.length());
+                                data2 = new JSONArray();
+                            }
+                        }).start();
+                    }
                 }
                 count2++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            data2.put(tmp);
         }
 
         @Override
@@ -305,7 +326,6 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                             handler.sendMessage(msg);
                         }
                     }).start();
-
                 }
             }
         });
@@ -321,7 +341,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                 menuWindow.showAtLocation(Ride.this.findViewById(R.id.head),
                     BOTTOM | CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
                 menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                menuWindow.setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 break;
             case R.id.backup:
                 finish();
