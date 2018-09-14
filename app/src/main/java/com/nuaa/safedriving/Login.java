@@ -125,31 +125,29 @@ public class Login extends AppCompatActivity {
                     String email2 = null;
                     int status2 = -1;
                     try {
-                        status2 = inf.getInt("status");
-                        token2 = inf.getString("token");
-                        email2 = inf.getString("email");
+                        status2 = inf.getInt("hr");
+                        token2 = inf.getString("data");
+                        email2 = inf.getString("extraData");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(status2);
-                    if (status2 == -1) {
-                        pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.server_error, Toast.LENGTH_SHORT)
-                            .show();
-                    } else if (status2 == 2) {
-                        pDialog.cancel();
-                        Toast.makeText(Login.this, "未设置邮箱无法找回密码", Toast.LENGTH_SHORT).show();
-                    } else if (status2 == 0) {
-                        pDialog.cancel();
-                        Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT)
-                            .show();
-                    } else {
+                    if (status2 == HResult.S_OK.getIndex()
+                        && email2 != null && !email2.equals("null")
+                        && email2.length() != 0) {
                         pDialog.cancel();
                         editor.putString("token", token2);
                         editor.putString("email", email2);
                         editor.commit();
                         Intent intent = new Intent(Login.this, CheckCode.class);
                         startActivity(intent);
+                    } else if (status2 == HResult.E_NO_USERNAME.getIndex()) {
+                        pDialog.cancel();
+                        Toast.makeText(Login.this, R.string.non_existent_name, Toast.LENGTH_SHORT)
+                            .show();
+                    } else if (email2 == null || email2.equals("null")
+                        || email2.length() == 0) {
+                        pDialog.cancel();
+                        Toast.makeText(Login.this, "未设置邮箱无法找回密码", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

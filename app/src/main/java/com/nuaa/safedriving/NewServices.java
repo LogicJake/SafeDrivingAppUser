@@ -85,7 +85,7 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
-            String data = "&new_passwd=" + newpass;
+            String data = "&password=" + newpass;
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
             urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
@@ -227,7 +227,7 @@ public class NewServices {
     public static JSONObject forgetPassd(String name) {
         JSONObject res = null;
         try {
-            String path = rooturl + "index.php?_action=getForgetpasswd&user_name=" + name;
+            String path = rooturl + "account/forgetPassword?name=" + name;
             URL url = new URL(path);
             // 获得连接
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -254,7 +254,7 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                res = new JSONObject(baos.toString()).getJSONObject("data");
+                res = new JSONObject(baos.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
