@@ -499,9 +499,9 @@ public class NewServices {
         return result;
     }
 
-    public static boolean insertComment(String token, float rate, String suggestion, String tag) {
+    public static int insertComment(String token, float rate, String suggestion, int rideId) {
         try {
-            String path = rooturl + "index.php?_action=postComment&token=" + token;
+            String path = rooturl + "ride/addComment";
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式
@@ -509,12 +509,14 @@ public class NewServices {
             // 设置请求的超时时间
             urlConnection.setReadTimeout(5000);
             urlConnection.setConnectTimeout(5000);
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
+
             String data = "&rate="
                 + rate
-                + "&suggestion="
+                + "&comment="
                 + URLEncoder.encode(suggestion, "UTF-8")
-                + "&tag="
-                + URLEncoder.encode(tag, "UTF-8");
+                + "&rideId="
+                + rideId;
             urlConnection.setRequestProperty("Content-Length",
                 String.valueOf(data.getBytes().length));
             urlConnection.setRequestProperty("Content-Type",
@@ -541,26 +543,24 @@ public class NewServices {
                 is.close();
                 baos.close();
                 System.out.println(baos.toString());
-                int code = new JSONObject(baos.toString()).getInt("code");
-                if (code == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                int code = new JSONObject(baos.toString()).getInt("hr");
+                return code;
             } else {
-                return false;
+                return -1;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
-        return false;
     }
 
-    public static JSONObject startRide(String region, String token) {
+    public static JSONObject startRide(String region, String token, String tag) {
         JSONObject result = null;
         try {
-            String path =
-                rooturl + "ride/startRide?region=" + region;
+            String path = rooturl + "ride/startRide?region=" + region;
+            if (tag != null) {
+                path += "&busTag=" + tag;
+            }
             URL url = new URL(path);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             // 设置请求的方式

@@ -43,7 +43,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     private int type;
     private String date;
     private String time;
-    private String tag;
+    private String tag = null;
+
     private ImageView backup;
     private SensorManager sensorManager;
     String Region = null;
@@ -79,8 +80,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     postComment(token, rate, suggestion);
                     break;
                 case 1:
-                    boolean flag = (boolean) msg.obj;
-                    if (flag) {
+                    int flag = (int) msg.obj;
+                    if (flag == HResult.S_OK.getIndex()) {
                         Intent intent = new Intent(Ride.this, Surprise.class);
                         startActivity(intent);
                         finish();
@@ -94,6 +95,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                         menuWindow.setSoftInputMode(
                             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     }
+                    break;
                 case 2:
                     JSONObject res = (JSONObject) msg.obj;
                     if (res == null) {
@@ -244,7 +246,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean flag = NewServices.insertComment(token, rate, suggestion, tag);
+                int flag = NewServices.insertComment(token, rate, suggestion, rideId);
                 Message msg = new Message();
                 msg.what = 1;
                 msg.obj = flag;
@@ -319,7 +321,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void run() {
                             final String token = preferences.getString("token", null);
-                            JSONObject result = NewServices.startRide(Region, token);
+                            JSONObject result = NewServices.startRide(Region, token,tag);
                             Message msg = new Message();
                             msg.what = 2;
                             msg.obj = result;
