@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.nuaa.safedriving.MyCalendar;
+import com.nuaa.safedriving.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,9 +70,9 @@ public class Home extends Fragment {
                 Intent intent = new Intent(view.getContext(), ShuttleInfo.class);
                 String origin_content = origin.getText().toString().trim();
                 if (origin_content.equals("将军路校区")) {
-                    intent.putExtra("type", 1);
+                    intent.putExtra("type", 0);
                 } else {
-                    intent.putExtra("type", 2);
+                    intent.putExtra("type", 1);
                 }
                 intent.putExtra("date", time.getText().toString().trim());
                 startActivity(intent);

@@ -1,20 +1,19 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.json.JSONObject;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
+import com.nuaa.safedriving.model.HResult;
 
 public class FullInEmail extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class FullInEmail extends AppCompatActivity {
             switch (msg.what) {
                 case 0:
                     int status = (int) msg.obj;
-                    if (status == 1) {
+                    if (status == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(FullInEmail.this, "发送成功", Toast.LENGTH_SHORT);
                         CountDownTimer timer = new CountDownTimer(10 * 1000, 1000) {
@@ -51,7 +50,7 @@ public class FullInEmail extends AppCompatActivity {
                     break;
                 case 1:
                     status = (int) msg.obj;
-                    if (status == 1) {
+                    if (status == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(FullInEmail.this, "验证成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(FullInEmail.this, Login.class);

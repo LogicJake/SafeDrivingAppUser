@@ -1,5 +1,6 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,12 +9,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,26 +26,28 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.github.mikephil.charting.charts.LineChart;
+import com.nuaa.safedriving.FinishPopupWindow;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
+import com.nuaa.safedriving.model.HResult;
 import com.nuaa.safedriving.util.DynamicLineChartManager;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
 
 public class Ride extends AppCompatActivity implements View.OnClickListener {
+    private Context context;
     private int type;
     private String date;
     private String time;
-    private String tag;
+    private String tag = null;
+
     private ImageView backup;
     private SensorManager sensorManager;
     String Region = null;
@@ -54,6 +58,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     Boolean isHave1 = false;
     Boolean isHave2 = false;
     Button finsh;
+    int rideId;
     private FinishPopupWindow menuWindow;
     private SharedPreferences preferences;
 
@@ -64,8 +69,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     private List<String> names = new ArrayList<>(); //折线名字集合
     private List<Integer> colour = new ArrayList<>();//折线颜色集合
 
-    private int count1 = 10;
-    private int count2 = 10;
+    private int count1 = 50;
+    private int count2 = 50;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -78,8 +83,8 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     postComment(token, rate, suggestion);
                     break;
                 case 1:
-                    boolean flag = (boolean) msg.obj;
-                    if (flag) {
+                    int flag = (int) msg.obj;
+                    if (flag == HResult.S_OK.getIndex()) {
                         Intent intent = new Intent(Ride.this, Surprise.class);
                         startActivity(intent);
                         finish();
@@ -93,6 +98,30 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                         menuWindow.setSoftInputMode(
                             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     }
+                    break;
+                case 2:
+                    JSONObject res = (JSONObject) msg.obj;
+                    if (res == null) {
+                        Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                        chooseSeat();
+                    } else {
+                        try {
+                            int hr = res.getInt("hr");
+                            if (hr == HResult.S_OK.getIndex()) {
+                                rideId = res.getInt("data");
+                                StartRecord();          //一切正常采集数据
+                                init();
+                            } else {
+                                Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                                chooseSeat();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            chooseSeat();
+                            Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
             }
         }
     };
@@ -108,23 +137,35 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time", "" + timeStamp);
-                tmp.put("x", "" + x);
-                tmp.put("y", "" + y);
-                tmp.put("z", "" + z);
-                if (count1 == 10) {
+                if (count1 == 50) {
                     list1.add(x);
                     list1.add(y);
                     list1.add(z);
                     dynamicLineChartManager1.addEntry(list1);
                     list1.clear();
                     count1 = 0;
+
+                    tmp.put("time", "" + timeStamp);
+                    tmp.put("x", "" + x);
+                    tmp.put("y", "" + y);
+                    tmp.put("z", "" + z);
+                    data.put(tmp);
+                    if (data.length() == 10) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String token = preferences.getString("token", null);
+                                NewServices.collect(rideId, 1, token, data.toString());
+                                Log.d("data length", "run: " + data.length());
+                                data = new JSONArray();
+                            }
+                        }).start();
+                    }
                 }
                 count1++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            data.put(tmp);
         }
 
         @Override
@@ -144,23 +185,34 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
             long timeStamp = System.currentTimeMillis();
             JSONObject tmp = new JSONObject();
             try {
-                tmp.put("time", "" + timeStamp);
-                tmp.put("x", "" + x);
-                tmp.put("y", "" + y);
-                tmp.put("z", "" + z);
-                if (count2 == 10) {
+                if (count2 == 50) {
                     list2.add(x);
                     list2.add(y);
                     list2.add(z);
                     dynamicLineChartManager2.addEntry(list2);
                     list2.clear();
                     count2 = 0;
+                    tmp.put("time", "" + timeStamp);
+                    tmp.put("x", "" + x);
+                    tmp.put("y", "" + y);
+                    tmp.put("z", "" + z);
+                    data2.put(tmp);
+                    if (data2.length() == 10) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String token = preferences.getString("token", null);
+                                NewServices.collect(rideId, 0, token, data2.toString());
+                                Log.d("data2 length", "run: " + data2.length());
+                                data2 = new JSONArray();
+                            }
+                        }).start();
+                    }
                 }
                 count2++;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            data2.put(tmp);
         }
 
         @Override
@@ -173,6 +225,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride);
+        context = this;
         backup = (ImageView) findViewById(R.id.backup);
         finsh = (Button) findViewById(R.id.finish);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);        //传感器
@@ -196,7 +249,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean flag = NewServices.insertComment(token, rate, suggestion, tag);
+                int flag = NewServices.insertComment(token, rate, suggestion, rideId);
                 Message msg = new Message();
                 msg.what = 1;
                 msg.obj = flag;
@@ -267,8 +320,17 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(Ride.this, "没有选择区域，请重新提交！", Toast.LENGTH_SHORT).show();
                     chooseSeat();
                 } else {
-                    StartRecord();          //一切正常采集数据
-                    init();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final String token = preferences.getString("token", null);
+                            JSONObject result = NewServices.startRide(Region, token, tag);
+                            Message msg = new Message();
+                            msg.what = 2;
+                            msg.obj = result;
+                            handler.sendMessage(msg);
+                        }
+                    }).start();
                 }
             }
         });
@@ -279,16 +341,38 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.finish:
+                postEndRide();
                 menuWindow = new FinishPopupWindow(Ride.this, handler);
                 //显示窗口
                 menuWindow.showAtLocation(Ride.this.findViewById(R.id.head),
                     BOTTOM | CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
                 menuWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                menuWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                menuWindow.setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 break;
             case R.id.backup:
+                postEndRide();
                 finish();
                 break;
+        }
+    }
+
+    private void postEndRide() {
+        unRegisterListener();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String token = preferences.getString("token", null);
+                NewServices.endRide(rideId, token);
+            }
+        }).start();
+    }
+
+    private void unRegisterListener() {
+        if (sensorManager != null) {
+            Log.d("Ride", "unRegisterListener: ");
+            sensorManager.unregisterListener(sensorEventListener);
+            sensorManager.unregisterListener(sensorEventListener2);
         }
     }
 

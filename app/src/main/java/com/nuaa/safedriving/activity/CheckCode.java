@@ -1,23 +1,22 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
+import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
-import org.json.JSONObject;
 
 public class CheckCode extends AppCompatActivity {
     private Handler handler = new Handler() {
@@ -28,8 +27,7 @@ public class CheckCode extends AppCompatActivity {
                 case 0:
                     pDialog.cancel();
                     int status = (int) msg.obj;
-                    if (status == 1) {
-                        System.out.println("success");
+                    if (status == HResult.S_OK.getIndex()) {
                         Toast.makeText(CheckCode.this, "发送成功", Toast.LENGTH_SHORT);
                         CountDownTimer timer = new CountDownTimer(10 * 1000, 1000) {
                             @Override
@@ -51,7 +49,7 @@ public class CheckCode extends AppCompatActivity {
                     break;
                 case 1:
                     status = (int) msg.obj;
-                    if (status == 1) {
+                    if (status == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(CheckCode.this, "验证成功", Toast.LENGTH_SHORT).show();
                         part1.setVisibility(View.GONE);
@@ -63,8 +61,8 @@ public class CheckCode extends AppCompatActivity {
                     }
                     break;
                 case 2:
-                    Boolean res = (Boolean) msg.obj;
-                    if (res) {
+                    int res = (int) msg.obj;
+                    if (res == HResult.S_OK.getIndex()) {
                         System.out.println("success");
                         Toast.makeText(CheckCode.this, "修改成功", Toast.LENGTH_SHORT).show();
                         finish();
@@ -132,8 +130,7 @@ public class CheckCode extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                int res = 0;
-                                res = NewServices.verifyCode(codeText, token);
+                                int res = NewServices.verifyCode(codeText, token);
                                 Message msg = new Message();
                                 msg.what = 1;
                                 msg.obj = res;
@@ -164,7 +161,7 @@ public class CheckCode extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                Boolean res = NewServices.ChangePass(token, str1);
+                                int res = NewServices.ChangePass(token, str1);
                                 Message msg = new Message();
                                 msg.obj = res;
                                 msg.what = 2;
@@ -184,8 +181,7 @@ public class CheckCode extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int res = 0;
-                res = NewServices.sendCode(email, token);
+                int res = NewServices.sendCode(email, token);
                 Message msg = new Message();
                 msg.what = 0;
                 msg.obj = res;

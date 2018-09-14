@@ -1,9 +1,10 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import com.nuaa.safedriving.R;
 import java.util.Random;
 
 public class Surprise extends AppCompatActivity {

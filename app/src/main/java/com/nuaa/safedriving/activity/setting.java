@@ -1,21 +1,20 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -27,22 +26,21 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
+import com.nuaa.safedriving.SelectPicPopupWindow;
+import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.CENTER_HORIZONTAL;
-import static com.nuaa.safedriving.NewServices.picurl;
+import static com.nuaa.safedriving.NewServices.rooturl;
 
 public class setting extends AppCompatActivity {
     private Handler handler = new Handler() {
@@ -51,49 +49,43 @@ public class setting extends AppCompatActivity {
             switch (msg.what) {
                 case 0:
                     super.handleMessage(msg);
-                    int res = (int) msg.obj;
-                    switch (res) {
-                        case 200:
-                            saveBitmapToSharedPreferences(
-                                picurl + preferences.getInt("id", 0) + ".jpg");
-                            pDialog.cancel();
-                            break;
-                        case 404:
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText("Oops...");
-                            pDialog.setContentText("出错了");
-                            pDialog.setCancelable(true);
-                            break;
-                        case 0:
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText("Oops...");
-                            pDialog.setContentText("网络错误");
-                            pDialog.setCancelable(true);
-                            break;
-                        case 1:
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText("Oops...");
-                            pDialog.setContentText("对不起，您上传的照片超过了1M");
-                            pDialog.setCancelable(true);
-                            break;
-                        case 2:
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText("Oops...");
-                            pDialog.setContentText("文件上传发生错误");
-                            pDialog.setCancelable(true);
-                            break;
-                        case 3:
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setTitleText("Oops...");
-                            pDialog.setContentText("不允许的扩展名");
-                            pDialog.setCancelable(true);
-                            break;
+                    JSONObject res = (JSONObject) msg.obj;
+                    int flag = -1;
+                    String avatarUrl = null;
+                    try {
+                        flag = res.getInt("hr");
+                        avatarUrl = res.getString("data");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    break;
+                    if (flag == HResult.S_OK.getIndex()) {
+                        saveBitmapToSharedPreferences(rooturl + avatarUrl);
+                        pDialog.cancel();
+                    }
+                    else if (flag == HResult.E_AVATAR_SUFFIX.getIndex())
+                    {
+                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setTitleText("Oops...");
+                        pDialog.setContentText("图片后缀不正确");
+                        pDialog.setCancelable(true);
+                    }
+                    else if (flag == HResult.E_AVATAR_BIG.getIndex())
+                    {
+                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setTitleText("Oops...");
+                        pDialog.setContentText("图片大小超过2M");
+                        pDialog.setCancelable(true);
+                    }
+                   else{
+                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setTitleText("Oops...");
+                        pDialog.setContentText("发生了不可预知的错误");
+                        pDialog.setCancelable(true);
+                    }
                 case 1:
                     super.handleMessage(msg);
-                    res = (int) msg.obj;
-                    if (res == 1) {
+                    flag = (int) msg.obj;
+                    if (flag == HResult.S_OK.getIndex()) {
                         Toast.makeText(setting.this, "注销成功", Toast.LENGTH_SHORT).show();
                         editor.clear();
                         editor.commit();
@@ -255,7 +247,7 @@ public class setting extends AppCompatActivity {
             public void run() {
                 String token = preferences.getString("token", null);
                 if (token != null) {
-                    int res = NewServices.postPic(token, new File(url));
+                    JSONObject res = NewServices.postPic(token, new File(url));
                     Message msg = new Message();
                     msg.obj = res;
                     msg.what = 0;
