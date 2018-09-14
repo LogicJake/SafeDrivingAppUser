@@ -336,6 +336,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.finish:
+                postEndRide();
                 menuWindow = new FinishPopupWindow(Ride.this, handler);
                 //显示窗口
                 menuWindow.showAtLocation(Ride.this.findViewById(R.id.head),
@@ -345,9 +346,20 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 break;
             case R.id.backup:
+                postEndRide();
                 finish();
                 break;
         }
+    }
+
+    private void postEndRide() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String token = preferences.getString("token", null);
+                NewServices.endRide(rideId, token);
+            }
+        }).start();
     }
 
     public void init() {
