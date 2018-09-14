@@ -321,7 +321,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void run() {
                             final String token = preferences.getString("token", null);
-                            JSONObject result = NewServices.startRide(Region, token,tag);
+                            JSONObject result = NewServices.startRide(Region, token, tag);
                             Message msg = new Message();
                             msg.what = 2;
                             msg.obj = result;
@@ -355,6 +355,7 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void postEndRide() {
+        unRegisterListener();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -362,6 +363,14 @@ public class Ride extends AppCompatActivity implements View.OnClickListener {
                 NewServices.endRide(rideId, token);
             }
         }).start();
+    }
+
+    private void unRegisterListener() {
+        if (sensorManager != null) {
+            Log.d("Ride", "unRegisterListener: ");
+            sensorManager.unregisterListener(sensorEventListener);
+            sensorManager.unregisterListener(sensorEventListener2);
+        }
     }
 
     public void init() {
