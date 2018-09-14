@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

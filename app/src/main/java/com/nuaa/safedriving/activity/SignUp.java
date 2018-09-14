@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import org.json.JSONException;

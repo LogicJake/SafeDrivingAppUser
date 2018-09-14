@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.nuaa.safedriving.model.HResult;
 import org.json.JSONException;
 import org.json.JSONObject;

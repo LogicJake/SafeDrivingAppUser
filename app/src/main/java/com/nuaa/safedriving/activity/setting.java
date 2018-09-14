@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +26,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
+import com.nuaa.safedriving.SelectPicPopupWindow;
 import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;

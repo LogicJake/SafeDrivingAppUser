@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
+import com.nuaa.safedriving.R;
 import java.io.ByteArrayInputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -68,7 +69,7 @@ public class UserInfo extends Fragment {
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), setting.class);
+                Intent intent = new Intent(view.getContext(), com.nuaa.safedriving.activity.setting.class);
                 startActivity(intent);
             }
         });

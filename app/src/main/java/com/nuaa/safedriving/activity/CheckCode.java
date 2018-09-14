@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 

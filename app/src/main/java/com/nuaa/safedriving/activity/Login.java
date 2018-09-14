@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.nuaa.safedriving.model.HResult;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import java.io.ByteArrayOutputStream;

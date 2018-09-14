@@ -1,4 +1,4 @@
-package com.nuaa.safedriving;
+package com.nuaa.safedriving.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +27,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import com.github.mikephil.charting.charts.LineChart;
+import com.nuaa.safedriving.FinishPopupWindow;
+import com.nuaa.safedriving.NewServices;
+import com.nuaa.safedriving.R;
 import com.nuaa.safedriving.model.HResult;
 import com.nuaa.safedriving.util.DynamicLineChartManager;
 import java.util.ArrayList;
